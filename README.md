@@ -14,9 +14,13 @@ An agent with DomainKits tools can look up WHOIS or check availability. An agent
 
 | Skill | What it does |
 |---|---|
-| [domain-keyword-intelligence](./domain-keyword-intelligence/) | Spot emerging keyword spikes, filter junk from real market signals, research catalysts, analyze registration patterns |
-
-More skills coming soon.
+| [domain-analyze](./skills/domain-analyze/) | Build a complete evidence-based picture of one domain: registration, DNS, safety, backlinks, cross-TLD footprint, and market context |
+| [domain-cma-valuation](./skills/domain-cma-valuation/) | Comparative Market Analysis using verified for-sale substitutes to position a domain within the current asking-price market |
+| [domain-generator](./skills/domain-generator/) | Generate brandable domain variations from a keyword, concept, or taken domain across semantic distances, then verify availability |
+| [domain-market-beat](./skills/domain-market-beat/) | Time-bounded domain market briefing covering notable sales, registration trends, and recent domain movements |
+| [domain-name-advisor](./skills/domain-name-advisor/) | Naming consultation that turns vague requirements into a verified shortlist across registration, aftermarket, and lifecycle paths |
+| [keyword-intel](./skills/keyword-intel/) | Map search, advertiser, registration, supply, and transaction evidence around one known keyword |
+| [keyword-trend-hunter](./skills/keyword-trend-hunter/) | Discover hot or emerging registration keywords, validate each spike against new-registration cohort signals |
 
 ## Prerequisites
 
@@ -63,7 +67,7 @@ Pick the skill you want and copy its folder:
 git clone https://github.com/ABTdomain/domainkits-skills.git
 
 # Copy a skill to your agent's skills directory
-cp -r domainkits-skills/domain-keyword-intelligence ~/.claude/skills/
+cp -r domainkits-skills/skills/keyword-intel ~/.claude/skills/
 ```
 
 Or download a single skill folder directly from GitHub.
@@ -72,11 +76,12 @@ Claude Code will auto-detect the skill and use it when relevant. No restart need
 
 ## Skill Structure
 
-Each skill is a self-contained folder with one required file:
+Each skill lives under `skills/` as a self-contained folder with one required file:
 
 ```
-skill-name/
-└── SKILL.md    # Instructions, workflow, and metadata
+skills/
+└── skill-name/
+    └── SKILL.md    # Instructions, workflow, and metadata
 ```
 
 Some skills may include additional supporting files (templates, scripts, examples) in the same folder.
