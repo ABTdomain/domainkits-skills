@@ -31,9 +31,9 @@ For an out-of-scope target, explain which condition failed and stop the CMA. For
 
 ## Data interfaces
 
-Each row names a required capability and the DomainKits MCP tool that provides it. Any provider of the same data works. If a capability is unavailable, mark it Unavailable and continue only when the remaining evidence can still support the model.
+DomainKits MCP supplies discovery evidence through the tools below; it is not the complete CMA engine. Host-provided browser or WebFetch access verifies the original marketplace pages. Equivalent providers are acceptable. Never assume that an MCP listing contains listing type, listing age, or price-change history when its actual payload does not return those fields. Mark unavailable fields `Not Provided` and continue only when the remaining evidence can still support the model.
 
-- Current comparable for-sale listings, DomainKits: `market` / `aged` / `active`
+- Current comparable for-sale listing leads, DomainKits: `market` / `aged` / `active`
 - Cross-TLD registration breadth for the value-bearing keyword, DomainKits: `tld_check`
 - Keyword registration activity as supporting context, DomainKits: `keywords_trends`
 - Safe Browsing / malware status before fetching the target domain, DomainKits: `safety`
@@ -108,7 +108,8 @@ If the user explicitly asks for historical sales, present them in a separate app
 
 - **Asking price is seller intent, not transaction proof.** Never describe the resulting range as a certain sale price or completed-market value.
 - **Verify current status.** Check each retained comparable against its original marketplace listing when possible and record source and observation date.
-- **Label fallback evidence.** If the original page is blocked, retain a current tool-reported listing only as `marketplace page not verified`; do not call it fully verified.
+- **Label fallback evidence.** If the original page is blocked, retain a current tool-reported listing only as `marketplace page not verified`; do not call it fully verified or count it toward the minimum verified-comparable rule.
+- **Do not invent listing metadata.** Obtain listing type, listing age, and price-reduction history from the original marketplace or another named current source. If the page and tool do not provide a field, write `Not Provided`; do not infer it from the asking price, search snippet, or first observation in this report.
 - **Deduplicate.** Count the same domain once even when it appears on several marketplaces; record differing asks rather than treating them as separate comparables.
 - **Separate listing types.** Distinguish BIN, minimum offer, current auction bid, and lease-to-own. A monthly lease payment is not the total asking price, and a current bid is not a completed sale.
 - **Normalize currency carefully.** Preserve original currency. If prices must be combined, convert with a current FX source and date. If FX data is unavailable, keep currencies separate and do not calculate a combined range.
@@ -128,7 +129,7 @@ Use information already supplied by the user. Ask at most one question, and only
 
 4. **Verify and classify.** Verify original listings where possible, deduplicate, label listing type and verification status, normalize currency when possible, and assign each retained item to comparable tier 1, 2, or 3.
 
-5. **Apply the sufficiency rule.** Use at least three current tier-1 or tier-2 listings to produce a primary positioning range. With fewer than three, present the observed listings and state `Insufficient current comparable market`; do not manufacture a range. Tier-3 or synonym evidence cannot satisfy this minimum.
+5. **Apply the sufficiency rule.** Use at least three current tier-1 or tier-2 listings whose current status and asking price were verified from the original marketplace or another named current source to produce a primary positioning range. MCP-only leads labeled `marketplace page not verified` may be shown as fallback evidence but do not satisfy this minimum. With fewer than three verified comparables, present the observed listings and state `Insufficient current comparable market`; do not manufacture a range. Tier-3 or synonym evidence cannot satisfy this minimum.
 
 6. **Position the target.** Identify the closest substitutes and equal-or-better substitution frontier, then describe where the target belongs within the current same-keyword market and why. Produce a listing-positioning range only when the sufficiency rule is met. Never produce an expected transaction range.
 
@@ -160,6 +161,6 @@ Compliance statement: "This is a substitution-based current listing analysis for
 - Prefer same-keyword, same-TLD, same-role comparables; keep other TLDs and synonyms as separately labeled secondary context.
 - Exclude accidental substring matches, pattern-only analogies, and brand-dependent names.
 - Asking prices support listing position, not an expected transaction price.
-- Require at least three current tier-1 or tier-2 comparables or report insufficient evidence without a range.
+- Require at least three currently verified tier-1 or tier-2 comparables; MCP-only unverified listing leads do not satisfy the minimum. Otherwise report insufficient evidence without a range.
 - Verify, deduplicate, label listing type, preserve provenance, and timestamp every price.
 - Do not recommend buying, selling, or accepting an offer.

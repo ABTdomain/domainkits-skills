@@ -7,7 +7,7 @@ description: Produce a time-bounded domain-market news briefing with source tier
 
 **What this does:** produces a domain-market news briefing anchored to an explicit time window, with sourced headlines, a sales table that distinguishes sale types, registration-trend figures, recent domain movements, and a clear split between confirmed causes, plausible context, and unknowns.
 
-**Data interfaces it needs.** Each row names a capability, then the DomainKits MCP tool that provides it. Any provider of the same data works; where a capability has no source available, mark it Unavailable and continue. Query the sources fresh on every run; do not rely on model memory for current events.
+**Data interfaces it needs.** DomainKits MCP supplies part of the structured evidence through the tools below; host-provided web search and WebFetch supply current news, original announcements, and sale verification. Equivalent providers are acceptable. Never assume a field is present when the actual payload omits it; mark it `Not Provided` or the capability `Unavailable` and continue. Query sources fresh on every run; do not rely on model memory for current events.
 
 - Keyword registration trends (hot and emerging), DomainKits: `keywords_trends`
 - Recent premium-domain changes, DomainKits: `domain_changes`

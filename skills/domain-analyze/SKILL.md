@@ -7,7 +7,7 @@ description: Analyze a specific domain using registration, DNS, website, safety,
 
 **What this does:** builds a complete, evidence-based picture of one domain, its registration, safety, DNS setup, cross-TLD footprint, backlink profile, current usage, and market and legal context.
 
-**Data interfaces it needs.** Each row names a capability, then the DomainKits MCP tool that provides it. Any provider of the same data works; where a capability has no source available, mark it Unavailable and continue.
+**Data interfaces it needs.** DomainKits MCP supplies part of the technical evidence through the tools below; host-provided web search and WebFetch supply public context and page inspection. Equivalent providers are acceptable. Never assume an MCP payload contains a record type or field that it does not actually return. Mark a missing field or capability `Unavailable` and continue.
 
 - WHOIS / registration lookup, DomainKits: `whois`
 - DNS records (at least A, AAAA, MX, NS, TXT, CNAME; CAA when relevant), DomainKits: `dns`
@@ -32,13 +32,15 @@ This is the core rule of the skill. Classify every material finding as Fact, Inf
 
 Never convert absence of data into a negative finding. "No trademark hits returned" is not "the mark is clear"; "no sale record found" is not "never sold"; "no A record" is not "abandoned". Every time-sensitive conclusion must carry the date it was observed.
 
+For DNS, distinguish an explicitly returned empty record set from a record type the source does not support. In particular, if `dns` does not return a `CAA` field, report CAA as `Not Provided` or query an independent DNS source; never interpret the missing field as proof that no CAA record exists.
+
 ## Workflow
 
 Run the queries independently. A single tool failing, timing out, returning nothing, or being unavailable must NOT stop the rest of the report; mark that section Unavailable and continue. If the user asked only about one aspect (for example, just safety, or just backlinks), run that part and skip the rest: deliver only the section(s) that answer the question, plus their evidence limitations and sources, and do not emit the remaining sections of the full structure. The fixed output structure below applies in full only to a full-domain analysis; a narrow request returns the matching subset in the same format.
 
 1. **Gather core data in parallel:**
    - `whois` for registrar, key dates, and status codes.
-   - `dns` for A, AAAA, MX, NS, TXT, CNAME (and CAA if relevant).
+   - `dns` for A, AAAA, MX, NS, TXT, CNAME, and CAA when the actual response supports it. Otherwise mark CAA `Not Provided` or use an independent DNS source.
    - `safety` for malware / Safe Browsing status.
    - `backlink_summary` for rank, referring domains, and spam score, plus link-type distribution only when the source returns it.
    - `tld_check` for cross-TLD registration data.
