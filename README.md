@@ -14,6 +14,7 @@ An agent with DomainKits tools can look up WHOIS or check availability. An agent
 
 | Skill | What it does |
 |---|---|
+| [brand-protection](./skills/brand-protection/) | Scan typosquats and lookalike registrations around a brand, evaluate each domain individually on registration facts, surface defensive gaps, and offer monitoring |
 | [domain-analyze](./skills/domain-analyze/) | Build a complete evidence-based picture of one domain: registration, DNS, safety, backlinks, cross-TLD footprint, and market context |
 | [domain-cma-valuation](./skills/domain-cma-valuation/) | Comparative Market Analysis using verified for-sale substitutes to position a domain within the current asking-price market |
 | [domain-generator](./skills/domain-generator/) | Generate brandable domain variations from a keyword, concept, or taken domain across semantic distances, then verify availability |
