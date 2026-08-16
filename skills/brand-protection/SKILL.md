@@ -39,7 +39,7 @@ One tool failing marks that section Unavailable. Continue with the rest.
 
 1. **Typosquat.** Call `typosquat` with the primary domain. Collect variants that have `registered_date` (confirmed registered). Note variants without `registered_date` but with high `prefix_tld_count` as unknown-status for possible follow-up.
 
-2. **Recent registrations.** Call `nrds` with brand keyword, `position: contain`, sort `reg_date_desc`. Note `total_found` and how many results were reviewed (page 1 = first 10). If total_found is large, state that only the first page was checked. Note any clusters of registrations on the same date as context (date clustering alone is weak evidence).
+2. **Recent registrations.** Call `nrds` with brand keyword, `position: all`, sort `reg_date_desc`. Note `total_found` and how many results were reviewed (page 1 = first 10). If total_found is large, state that only the first page was checked. Note any clusters of registrations on the same date as context (date clustering alone is weak evidence).
 
 3. **Cross-TLD footprint.** Call `tld_check` with brand prefix. Returns per-TLD status for core TLDs only (com, net, org, io, ai, de): `registered`, `expiring`, `for_sale`, or `might_available`. Aggregate counts (`count`, `gtlds_count`, `cctlds_count`) cover a wider TLD set but carry no per-TLD detail.
 
