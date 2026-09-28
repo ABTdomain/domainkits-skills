@@ -11,14 +11,14 @@ description: Analyze a specific domain using registration, DNS, website, backlin
 
 - WHOIS / registration lookup, DomainKits: `whois`
 - DNS records (at least A, AAAA, MX, NS, TXT, CNAME; CAA when relevant), DomainKits: `dns`
-- URL threat check (malicious, phishing, or malware-hosting flags): DomainKits does not provide one. Use a threat-check tool the user has connected; otherwise mark it Unavailable
+- URL threat check (malicious, phishing, or malware-hosting flags): DomainKits does not provide one. If the user has connected a threat-check tool, ask once whether to use it; if none is connected or the user declines, mark it Unavailable
 - Backlink profile (rank, referring domains, spam score, and link-type distribution when the source provides it), DomainKits: `backlink_summary`
 - Cross-TLD registration data, DomainKits: `tld_check`
 - Public Suffix List rules and IDN / punycode conversion, for input normalization
 - Web search capability (market background, news, disputes)
 - Web fetch capability (load the domain and its variants), under the fetch rule below
 
-**Fetch rule.** Before fetching a domain's pages, run the threat check when a threat-check tool is connected, and never fetch a domain it flags. If no threat-check tool is connected, tell the user the domain's safety is unverified and fetch only with their go-ahead. Fetch read-only: no form submissions, no credential input, no file downloads.
+**Fetch rule.** If the user has connected a threat-check tool, ask once whether to run it before fetching any domain's pages in this task, and never fetch a domain it flags. Without a check, tell the user the domain's safety is unverified and fetch only with their go-ahead. Fetch read-only: no form submissions, no credential input, no file downloads.
 
 ## Input normalization
 
@@ -43,13 +43,13 @@ Run the queries independently. A single tool failing, timing out, returning noth
 1. **Gather core data in parallel:**
    - `whois` for registrar, key dates, and status codes.
    - `dns` for A, AAAA, MX, NS, TXT, CNAME, and CAA when the actual response supports it. Otherwise mark CAA `Not Provided` or use an independent DNS source.
-   - Threat check through the user's connected threat-check tool, if any.
+   - Threat check through the user's connected threat-check tool, if the user agreed to use it.
    - `backlink_summary` for rank, referring domains, and spam score, plus link-type distribution only when the source returns it.
    - `tld_check` for cross-TLD registration data.
 
 2. **Cross-TLD investigation (conditional).** Use the rating the tool provides. If the tool gives no rating, report the raw count and the set of TLDs checked; do not label a count "high" on your own. If cross-TLD registration is notable, `whois` the common variants (.com/.net/.org) and record the registrars. Report the pattern as a fact; treat its meaning as inference (for example, "several variants use the same registrar, which may indicate they were registered together, but does not establish it; a popular registrar or registrar migrations can produce the same pattern"). Do not attribute the variants to any person or organization. If you fetch the variants to see whether they resolve to the same site, each variant is a distinct domain: apply the fetch rule to each variant, and never carry the target domain's threat-check result over to a variant. For any variant the threat check flags, record the flag, skip the fetch, and report only its non-fetch evidence (WHOIS, DNS).
 
-3. **Website status.** Apply the fetch rule. If the threat check has flagged the domain as malicious, phishing, or malware-hosting, do NOT fetch it. Warn the user that the domain carries a serious threat flag and that continuing the analysis is not advised. Only if the user explicitly insists, skip the fetch (never load a flagged domain) and continue with the rest of the analysis; in that case the assessment defaults to not advised for registration, acquisition, or use, and the threat flag is the leading finding. If the check is clean, or no threat-check tool is connected and the user agrees to an unverified fetch, fetch the domain to determine current use: active business, parked page, for-sale landing, or no content. Distinguish and record HTTP redirects (and their target), TLS errors, login walls, and anti-bot / captcha pages, rather than treating them as "no content". If the user declines an unverified fetch, mark Website status Unavailable.
+3. **Website status.** Apply the fetch rule. If the threat check has flagged the domain as malicious, phishing, or malware-hosting, do NOT fetch it. Warn the user that the domain carries a serious threat flag and that continuing the analysis is not advised. Only if the user explicitly insists, skip the fetch (never load a flagged domain) and continue with the rest of the analysis; in that case the assessment defaults to not advised for registration, acquisition, or use, and the threat flag is the leading finding. If the check is clean, or there is no check and the user agrees to an unverified fetch, fetch the domain to determine current use: active business, parked page, for-sale landing, or no content. Distinguish and record HTTP redirects (and their target), TLS errors, login walls, and anti-bot / captcha pages, rather than treating them as "no content". If the user declines an unverified fetch, mark Website status Unavailable.
 
 4. **Market and legal context.** Search the web for context that technical data cannot show: recent sale history, related news or brand events, and legal disputes (UDRP, trademark conflicts). Cite a source for each external claim, with the observation date. Prefer authoritative sources by type: UDRP from official decision databases (WIPO, Forum); trademarks from official trademark registries; sale prices from verifiable sale databases or marketplace announcements. A search-result snippet is not final evidence; open the original page to confirm. Historical pricing MUST distinguish confirmed public sale records from current listing / asking prices; do not merge them. Report a dispute by case number, date, and outcome, without naming individual parties. For a UDRP decision, add a one-sentence summary of what kind of dispute it was and the panel's finding on each of the three UDRP elements (identical or confusingly similar to the complainant's mark; the respondent's rights or legitimate interests; registration and use in bad faith), as the decision states them. Any trademark or UDRP observation is a search result, not a legal opinion.
 
@@ -86,7 +86,7 @@ If the user's goal is not already known, ask one concise follow-up question. Oth
 
 ## Key principles
 
-- Never fetch a domain that the threat check has flagged as malicious, phishing, or malware-hosting, and without a connected threat check, fetch only with the user's go-ahead. Make the threat flag the leading finding, and default the assessment to not advised for registration, acquisition, or use, even if the user insists on continuing.
+- Never fetch a domain that the threat check has flagged as malicious, phishing, or malware-hosting, and without a threat check, fetch only with the user's go-ahead. Make the threat flag the leading finding, and default the assessment to not advised for registration, acquisition, or use, even if the user insists on continuing.
 - Classify every material finding as fact, inference, or unknown. Use "may indicate" / "is consistent with" for inference.
 - Absence of a record is never proof of absence. Do not read "not found" as "does not exist".
 - Every query is independent; one failure marks a section Unavailable and does not abort the report.

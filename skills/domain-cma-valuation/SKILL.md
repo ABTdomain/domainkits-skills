@@ -36,11 +36,11 @@ DomainKits MCP supplies discovery evidence through the tools below; it is not th
 - Current comparable for-sale listing leads, DomainKits: `market` / `aged` / `active`
 - Cross-TLD registration breadth for the value-bearing keyword, DomainKits: `tld_check`
 - Keyword registration activity as supporting context, DomainKits: `keywords_trends`
-- URL threat check before fetching the target domain: DomainKits does not provide one. Use a threat-check tool the user has connected; otherwise mark it Unavailable
+- URL threat check before fetching the target domain: DomainKits does not provide one. If the user has connected a threat-check tool, ask once whether to use it; if none is connected or the user declines, mark it Unavailable
 - Web access or browser automation for verifying original marketplace listings
 - Current foreign-exchange reference when prices must be normalized across currencies
 
-**Fetch rule.** Before fetching a domain's pages, run the threat check when a threat-check tool is connected, and never fetch a domain it flags. If no threat-check tool is connected, tell the user the domain's safety is unverified and fetch only with their go-ahead. Fetch read-only: no form submissions, no credential input, no file downloads.
+**Fetch rule.** If the user has connected a threat-check tool, ask once whether to run it before fetching any domain's pages in this task, and never fetch a domain it flags. Without a check, tell the user the domain's safety is unverified and fetch only with their go-ahead. Fetch read-only: no form submissions, no credential input, no file downloads.
 
 Optional follow-up capability, used only if the user asks: `monitor` to watch the target domain for WHOIS, DNS, or page changes.
 

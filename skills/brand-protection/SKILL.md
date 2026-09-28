@@ -17,10 +17,10 @@ Scan the domain landscape around a brand, evaluate each similar registration ind
 
 **Needs from the host:**
 
-- URL threat check: DomainKits does not provide one. Use a threat-check tool the user has connected; if none is connected, mark the threat check Unavailable.
+- URL threat check: DomainKits does not provide one. If the user has connected a threat-check tool, ask once whether to use it in this scan; if none is connected or the user declines, mark the threat check Unavailable.
 - Web fetch, only for page tracking and only under the fetch rule below.
 
-**Fetch rule.** Before fetching a domain's pages, run the threat check when a threat-check tool is connected, and never fetch a domain it flags. If no threat-check tool is connected, tell the user the domain's safety is unverified and fetch only with their go-ahead. Fetch read-only: no form submissions, no credential input, no file downloads.
+**Fetch rule.** If the user has connected a threat-check tool, ask once whether to run it before fetching any domain's pages in this task, and never fetch a domain it flags. Without a check, tell the user the domain's safety is unverified and fetch only with their go-ahead. Fetch read-only: no form submissions, no credential input, no file downloads.
 
 ## Input
 
@@ -67,7 +67,7 @@ For each selected domain:
 
 1. **WHOIS.** Call `whois`. Extract registration date, registrar, expiry, nameservers. Report as facts.
 2. **DNS.** Call `dns`. Extract A/AAAA/CNAME records, MX, NS. Report as facts. DNS alone cannot reliably distinguish parking pages from active sites (a domain with no A record may have AAAA or CNAME; parking IPs are not enumerated here). Treat DNS as context, not classification.
-3. **Threat check.** If a threat-check tool is connected, check the variant and report its threat types as detection signals. A hit does not confirm malice; no hit does not confirm safety. Otherwise mark the threat check Unavailable in the report and continue.
+3. **Threat check.** If the user agreed to use a connected threat-check tool, check the variant and report its threat types as detection signals. A hit does not confirm malice; no hit does not confirm safety. Otherwise mark the threat check Unavailable in the report and continue.
 4. **Assessment.** Note mutation type as fact. Note visual similarity as inference. Note registration timing as fact. Note threat-check hits as detection signals. Do not infer intent.
 
 ### Phase 3: Report and next steps
