@@ -35,7 +35,7 @@ DomainKits MCP supplies discovery evidence through the tools below; it is not th
 
 - Current comparable for-sale listing leads, DomainKits: `market` / `aged` / `active`
 - Cross-TLD registration breadth for the value-bearing keyword, DomainKits: `tld_check`
-- Keyword registration activity as supporting context, DomainKits: `keywords_trends`
+- Market-wide registration trends (what people are registering recently) as supporting context, DomainKits: `keywords_trends`; relevant only when the value-bearing keyword appears on a trend list
 - URL threat check before fetching the target domain: DomainKits does not provide one. If the user has connected a threat-check tool, ask once whether to use it; if none is connected or the user declines, mark it Unavailable
 - Web access or browser automation for verifying original marketplace listings
 - Current foreign-exchange reference when prices must be normalized across currencies

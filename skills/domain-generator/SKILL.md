@@ -9,9 +9,11 @@ description: Generate modern brandable domains from a user-supplied keyword, con
 
 Modern naming does not require every name to describe the product literally. A strong name may communicate a function, benefit, attitude, movement, image, emotional promise, or memorable sound. Abstractness is valid when it creates intentional openness and a coherent brand story; random obscurity is not. Concatenation remains a useful construction method, but it is one instrument rather than the default method.
 
-**Data interfaces it needs.** DomainKits MCP supplies the availability lead below; host-provided web access supplies the public collision check. Equivalent providers are acceptable. Never infer availability from a missing field, request failure, or undocumented response shape; mark the capability `Unavailable` and continue.
+**Data interfaces it needs.** DomainKits MCP supplies the availability lead and TLD pricing below; host-provided web access supplies the public collision check and the registrar's own pricing page. Equivalent providers are acceptable. Never infer availability from a missing field, request failure, or undocumented response shape; mark the capability `Unavailable` and continue.
 
-- Availability check with pricing, DomainKits: `bulk_available`
+- Availability check, DomainKits: `bulk_available`
+- A TLD's standard registration and renewal price, DomainKits: `price`
+- Premium status and a name's actual registration price: host web access to the registrar's own page
 - Web access for a lightweight public-web check on obvious brand collisions
 
 ## Evidence discipline
@@ -19,7 +21,7 @@ Modern naming does not require every name to describe the product literally. A s
 - **Availability is a point-in-time signal.** Only a successful per-domain result that explicitly reports the domain as available qualifies as verified. Any other status, a missing domain row, a failed request, or an unrecognized response does not qualify. Every verified domain must carry the observation timestamp. Describe it as "available at check time", never as guaranteed registrable until registration completes.
 - **Respect the creative constraint.** Treat the full input as the source string. Identify possible roots and modifiers as interpretations, not facts (for example, `getflow` may be root `flow` with modifier `get`, or the whole brand `getflow`). Never silently discard a user-required word. When the input is only a conceptual seed, candidates may move beyond the literal string while preserving an explainable connection.
 - **Creative meaning is interpretation.** Present metaphors, emotional readings, sound symbolism, and visual impressions as intended creative rationale, not universal fact. Deliberate ambiguity is allowed; accidental incoherence is not.
-- **Price is data, not a guarantee.** Report prices with currency, check date, and provider; note standard vs premium and, where available, renewal price.
+- **Price is data, not a guarantee.** Report prices with currency, check date, and provider; note standard vs premium and, where available, renewal price. Premium status comes only from the registrar's own page; when it was not checked, mark it Not Provided and label the price as the TLD's standard price.
 - **Availability and a lightweight public-web check do not constitute trademark clearance. Do not claim that a candidate is legally safe to use.**
 
 ## Input modes
@@ -106,7 +108,7 @@ Present each shortlisted candidate with:
 - **Connection to the seed**: what literal constraint, meaning, sound, pattern, or valued feature it preserves.
 - **Why it works**: memorability, pronunciation, spelling, rhythm, visual form, audience fit, and distinctiveness.
 - **Availability at check time**: the explicit per-domain available result from `bulk_available`, with observation timestamp. Do not use this label for any other, missing, or failed result.
-- **Standard / premium status**: whether the registry prices it as a premium name.
+- **Standard / premium status**: from the registrar's own page when checked; otherwise Not Provided.
 - **Registration and renewal price**: first-year and renewal price where available, with currency.
 - **Provider and observation date**: the source of the price and when it was checked.
 - **Language / brand caveat**: any cross-language meaning issue or possible brand collision noted.

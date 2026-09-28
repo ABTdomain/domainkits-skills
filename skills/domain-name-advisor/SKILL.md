@@ -14,7 +14,9 @@ Both modes converge on the same cross-channel comparison and delivery. Most cand
 
 **Data interfaces it needs.** DomainKits MCP supplies part of the acquisition evidence through the tools below; host-provided web access supplies public-page verification. Equivalent providers are acceptable. Never assume an MCP result contains a field that is absent from its actual payload. Mark missing fields or capabilities `Unavailable` and continue.
 
-- Availability check with pricing, DomainKits: `bulk_available`
+- Availability check, DomainKits: `bulk_available`
+- A TLD's standard registration and renewal price, DomainKits: `price`
+- Premium status and a name's actual registration price: host web access to the registrar's own page
 - Cross-TLD registration data (a lightweight crowding signal), DomainKits: `tld_check`
 - Web access for a lightweight public-web check on obvious brand collisions; for confirming a named broker before a brokered candidate is offered (a domain with a public marketplace listing is a purchase candidate, handled via `aged`, not brokered); and, optionally, for a past sale price only from a named verifiable sales record. There is no dedicated sales-history source here, so the historical-sale field is omitted when no named source is found, never estimated.
 
@@ -29,7 +31,7 @@ Lifecycle acquisition capabilities (a primary source in taken-target mode; in pr
 
 - **Availability is point-in-time, and applies only to registrable candidates.** Only a successful per-domain `bulk_available` result that explicitly reports the domain as available qualifies as "available at check time"; attach an observation timestamp. Any other status, a missing domain row, a failed request, or an unrecognized response does not qualify. An already-registered candidate (expired / backorder, or for-sale / aged) is never labeled "available": verify and label it by its own status (current lifecycle and backorder / auction status for expired; current listing and asking price for aged), each with an observation timestamp. Do not run `bulk_available` on an already-registered candidate; it measures registrability only.
 - **Separate facts from judgment.** Source factual claims (availability, price, registration data). Present naming-quality judgments as reasoned creative assessments, not objective facts.
-- **Price is data, and its shape depends on the acquisition path.** For standard registration, report standard vs premium status, first-year and renewal price, currency, provider, and check date. For a backorder candidate, report the backorder fee and current bid where shown (first-year / renewal applies only once caught). For an aged listing, report the asking price and listing type. Never carry standard-registration first-year / renewal fields onto an already-registered candidate.
+- **Price is data, and its shape depends on the acquisition path.** For standard registration, report standard vs premium status (from the registrar's own page; otherwise Not Provided), first-year and renewal price, currency, provider, and check date. For a backorder candidate, report the backorder fee and current bid where shown (first-year / renewal applies only once caught). For an aged listing, report the asking price and listing type. Never carry standard-registration first-year / renewal fields onto an already-registered candidate.
 - **A lightweight public-web check may catch obvious existing brands, but it is not trademark clearance. Never describe a candidate as legally safe.**
 
 ## Workflow

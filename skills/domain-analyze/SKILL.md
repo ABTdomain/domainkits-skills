@@ -1,6 +1,6 @@
 ---
 name: domain-analyze
-description: Analyze a specific domain using registration, DNS, website, backlink, cross-TLD, and market and legal-risk evidence. Use when a user asks what is known about a domain, wants due diligence before acquiring one, or requests a technical domain analysis. Do not use for generating domain names, simple availability checks, or expired-domain evaluation.
+description: Analyze a specific domain using registration, DNS, website, backlink, cross-TLD, and market and legal-risk evidence. Use when a user asks what is known about a domain, wants due diligence before acquiring one, or requests a technical domain analysis. Do not use for generating domain names or simple availability checks.
 ---
 
 # Domain Analysis

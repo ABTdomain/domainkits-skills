@@ -9,7 +9,7 @@ description: Discover hot or emerging domain-registration keywords, validate eac
 
 **Data interfaces it needs.** DomainKits MCP supplies part of the evidence through the tools below; it is not the complete analysis engine. Use equivalent sources when available and use host-provided web access for public-page checks. Never assume a field exists merely because the workflow needs it. Mark an unavailable field or capability `Unavailable` and continue.
 
-- Keyword registration trends and source-computed aggregate metrics (hot, emerging, prefix), DomainKits: `keywords_trends`. Read registrar Top-1 / Top-3 only from this trend source when returned.
+- Market-wide keyword registration trends, that is, what people are registering recently (hot, emerging, prefix), with source-computed aggregate metrics, DomainKits: `keywords_trends`. Read registrar Top-1 / Top-3 and nameserver concentration only from this trend source when returned.
 - Newly registered domain rows for naming-pattern and coarse timing detail, DomainKits: `nrds`. It does not provide registrar / provider, so never calculate registrar concentration from it.
 - Registrable / expiring / listed inventory, DomainKits: `deleted` / `expired` / `aged`
 - Availability confirmation, DomainKits: `bulk_available`
@@ -25,7 +25,7 @@ This skill evaluates trends within the global, general-purpose open domain marke
 
 This model does not claim a non-.com ecosystem cannot be active. It means such activity has not been validated as a broad open-market domain trend. Extension-native ecosystems require a separate model.
 
-Independent participation, not raw `.com` count. A large `.com` block created through one concentrated pattern is not broad participation. Read the cohort from seven signals together: absolute `.com` count, `.com` share, registrar concentration, naming-pattern diversity, persistence across windows, low-base status, and single-TLD concentration. Registrar concentration is a necessary participant-diversity proxy, not a direct participant count. Use the trend provider's aggregate registrar distribution; use `nrds` only for the domain-row signals it actually returns.
+Independent participation, not raw `.com` count. A large `.com` block created through one concentrated pattern is not broad participation. Read the cohort from nine signals together: absolute `.com` count, `.com` share, registrar concentration, nameserver concentration, naming-pattern diversity, persistence across windows, low-base status, single-TLD concentration, and for-sale share. Registrar and nameserver concentration are participant-diversity proxies, not direct participant counts. For-sale share describes the kind of participation (resale-oriented rather than end use); report it with the outcome, but do not use it alone to validate or reject a trend. Use the trend provider's aggregate registrar distribution; use `nrds` only for the domain-row signals it actually returns.
 
 ## Event-cohort integrity
 
@@ -47,6 +47,8 @@ Data semantics: all ratios and concentration metrics are calculated from registr
 - Digit share: naming-structure signal. High (around 20% and up) is consistent with template or bulk-driven registration.
 - Registration persistence: measure as the number of distinct time windows (for example days within the cohort period) that carry new registrations, and the share of the cohort falling in its single busiest window. Persistent is roughly activity in several windows with no single window dominating (busiest-window share well under half); a single-day burst (one window holding most of the cohort) is not persistent. Show the per-window counts.
 - Registrar / provider concentration and pattern concentration: use source-computed registrar shares from `keywords_trends`, reporting the single largest registrar's share and the Top-3 cumulative share when each is returned, stated with the provider cohort size. Do not reconstruct Top-3 from `nrds` or from an incomplete registrar list. Measure pattern concentration from the aligned domain-row sample as the share following one repeated template. A largest-registrar share around half and up weakens the evidence of broad participation but does not establish how many actors exist. A dominant template is direct evidence of structural concentration. Interpret registrar concentration together with pattern, suffix, and time concentration; never convert it into a participant count.
+- Nameserver concentration: the largest single nameserver's share of the cohort, from `keywords_trends` when returned. A share around half and up is consistent with one operator or one parking or hosting setup behind much of the spike and weakens the evidence of broad participation. A popular registrar's default nameservers can produce the same reading, so interpret it together with registrar concentration.
+- For-sale share: the share of the cohort already listed for sale, from `keywords_trends` when returned. A high share is consistent with resale-oriented registration. Report the figure; it qualifies the outcome and does not decide it.
 - Low base: flag whenever the cohort total is small enough that ratios are unstable (for example a cohort in the low tens or fewer, or any single suffix or window driven by only a handful of names). A low-base flag caps the outcome at uncertain regardless of how the ratios read.
 
 If these bands have been back-tested on historical data, state it and record: the calibration sample's date range; which TLDs the sample covers; the label used for a "validated" trend; and whether the bands are updated periodically. If they have not been back-tested, keep them as heuristic bands: the model supports the direction of each signal, but the specific numbers are not derived laws. Do not present a specific cutoff as a proven threshold without that calibration record.
@@ -57,7 +59,7 @@ If these bands have been back-tested on historical data, state it and record: th
   1. `Brand-specific / model not applied` when the keyword mainly identifies one existing brand; do not surface candidate inventory.
   2. `Uncertain` when the cohort has a low base, cannot be aligned, has materially incomplete coverage, or is missing a signal that could change the result.
   3. `Not validated by the open market` when an adequately covered cohort has no `.com` participation or falls in the very-low `.com` band.
-  4. `Concentrated` when `.com` participates but suffix, template, time, or combined registrar-plus-structure evidence shows the spike is materially concentrated.
+  4. `Concentrated` when `.com` participates but suffix, template, time, nameserver, or combined registrar-plus-structure evidence shows the spike is materially concentrated.
   5. `Open-market validated` only when `.com` participation is meaningful, the cohort is not low-base, activity persists across windows, naming patterns are diverse, and no material concentration signal contradicts the reading.
   Mixed evidence that fits none of these rules is `Uncertain`. Always show the underlying figures. These are open-market registration outcomes, not investment instructions.
 - **Read participation from multiple signals**, per the model above; never from `.com` count alone.
@@ -78,12 +80,13 @@ Proceed end to end when the user names a keyword, requests a fixed number of tre
    - a preliminary participation reading from the provider's available metrics, using the heuristic bands and showing every underlying figure; never label it the final open-market outcome while registrar concentration, pattern diversity, or persistence remains Pending;
    - a low-base flag whenever the cohort total is small.
    - registrar Top-1 and Top-3 shares from `keywords_trends` when returned; mark either metric `Unavailable` when absent rather than attempting to recreate it from `nrds`;
+   - nameserver concentration (largest-nameserver share) and for-sale share from `keywords_trends` when returned; mark either `Unavailable` when absent;
    Pattern diversity and detailed time structure come from `nrds` in step 2, so mark those fields Pending here. Two cohorts are comparable only when their provider window, data date, coverage, and keyword-match semantics align. If the user has not chosen a keyword or requested an end-to-end top-N analysis, ask which keyword(s) to validate; otherwise continue.
 
 2. **Validate the event cohort.** For each selected keyword:
    - Apply the brand boundary and event-cohort integrity rules.
    - Pull `nrds` for the aligned cohort and report its matching rule, returned count, pagination / result-cap status, naming-pattern diversity, hyphen / digit / length structure, repeated-template share, and the coarse time clustering supported by its day-level registration dates or the available recency buckets. Do not report registrar Top-1 or Top-3 from `nrds`. If it cannot be aligned to the trend record, keep it supplemental and make the outcome uncertain rather than merging unlike samples.
-   - Apply the fixed outcome order to all seven signals. Report the outcome, confidence, exact figures, cohort dates, observation date, coverage, and unavailable fields.
+   - Apply the fixed outcome order to all nine signals. Report the outcome, confidence, exact figures, cohort dates, observation date, coverage, and unavailable fields.
    - If the user requests search-audience, advertiser, supply, offer, transaction, or catalyst evidence for the chosen keyword, use `keyword-intel`; do not rebuild those layers here.
 
 3. **Surface lifecycle candidates when requested.** Skip this phase for a brand-specific keyword. Filter every result through the same keyword-matching rule used for the event cohort:
@@ -100,8 +103,8 @@ Only if the user asks: use `keyword-intel` for a full evidence analysis of a sel
 
 - Judge trends against the global open domain market by aligned new-registration evidence; `.com` is necessary confirmation, not sufficient proof and not evidence of aftermarket transactions.
 - Keep `keywords_trends` and `nrds` in one event cohort when their provider window, data date, coverage, and keyword-match semantics can align. Otherwise do not merge them and cap the outcome at uncertain. Never fabricate exact event boundaries.
-- Read all seven signals together. Registrar concentration is a participant-diversity proxy, not a participant count; interpret it with pattern, suffix, and time concentration.
-- Compute each derivable signal a fixed, disclosed way so runs are reproducible: persistence as distinct active windows and busiest-window share; pattern concentration as largest-template share; low-base as a small-cohort flag. Read registrar concentration as the provider-reported largest-registrar and Top-3 shares from `keywords_trends`, without reconstructing missing distribution data. Show the underlying figures, never a bare "high / low", and do not switch measures between runs. A set low-base flag caps the outcome at uncertain.
+- Read all nine signals together. Registrar and nameserver concentration are participant-diversity proxies, not participant counts; interpret them with pattern, suffix, and time concentration. For-sale share qualifies the outcome and does not decide it.
+- Compute each derivable signal a fixed, disclosed way so runs are reproducible: persistence as distinct active windows and busiest-window share; pattern concentration as largest-template share; low-base as a small-cohort flag. Read registrar concentration as the provider-reported largest-registrar and Top-3 shares, and nameserver concentration as the largest-nameserver share, from `keywords_trends`, without reconstructing missing distribution data. Show the underlying figures, never a bare "high / low", and do not switch measures between runs. A set low-base flag caps the outcome at uncertain.
 - Thresholds are heuristic bands, not statistical laws; show the figures, treat edge values as uncertain, and only call a cutoff proven if a calibration record exists.
 - Apply the fixed outcome order: brand-specific, uncertain, not validated, concentrated, then validated. Mixed evidence is uncertain.
 - Record returned sample size, pagination, result cap, completeness claim, time window, observation date, and TLD / feed coverage. Partial ratios are observed-sample ratios, not population claims.
