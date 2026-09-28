@@ -29,7 +29,7 @@ Scan the domain landscape around a brand, evaluate each similar registration ind
 - `nrds` returns domain and registration date. TLD is parsed from the domain string, not a separate field. `nrds` does NOT return registrar. Registrar data requires `whois`.
 - `nrds` returns paginated results. The first page is not the full dataset. Note `total_found` from the response and state how many pages were checked vs. total available. Do not present one page as the complete picture.
 - Mutation type (omission, transposition, etc.) is a fact from `typosquat`. Visual similarity to the brand is a model judgment, not tool output. Classify it as inference, not fact.
-- Safe Browsing / malware status has no DomainKits tool; use an equivalent provider if the host has one. A hit is a detection signal, not a legal conclusion; a flagged domain may be benign (false positive, shared hosting, stale blocklist). A clean result is not confirmed safe (coverage gaps, new threats, evasion). Report hits with the specific threat types returned.
+- Safe Browsing / malware status has no DomainKits tool; use the user's own Google Safe Browsing / Web Risk API connection if they have one. A hit is a detection signal, not a legal conclusion; a flagged domain may be benign (false positive, shared hosting, stale blocklist). A clean result is not confirmed safe (coverage gaps, new threats, evasion). Report hits with the specific threat types returned.
 
 ## Workflow
 
@@ -60,7 +60,7 @@ For each selected domain:
 
 1. **WHOIS.** Call `whois`. Extract registration date, registrar, expiry, nameservers. Report as facts.
 2. **DNS.** Call `dns`. Extract A/AAAA/CNAME records, MX, NS. Report as facts. DNS alone cannot reliably distinguish parking pages from active sites (a domain with no A record may have AAAA or CNAME; parking IPs are not enumerated here). Treat DNS as context, not classification.
-3. **Safety.** If the host has an equivalent Safe Browsing / malware provider, check the variant and report its threat types as detection signals. A hit does not confirm malice; no hit does not confirm safety. If no provider is available, note it in the report and continue.
+3. **Safety.** If the user has connected their own Google Safe Browsing / Web Risk API, check the variant and report its threat types as detection signals. A hit does not confirm malice; no hit does not confirm safety. If there is no such connection, note it in the report and continue.
 4. **Assessment.** Note mutation type as fact. Note visual similarity as inference. Note registration timing as fact. Note safety flags as detection signals. Do not infer intent.
 
 ### Phase 3: Report and next steps
@@ -81,7 +81,7 @@ For each selected domain:
 - If memory is not enabled, ask the user: "Would you like me to enable memory so I can set up monitoring? I'll call `preferences action:set memory_enabled:true`." Only proceed with their consent.
 - Create: `monitor` with `action: set`, `domain: <domain>`, `tools: whois,dns`, `note: <context>`. Only offer to add up to the number of remaining slots. If the user selects more domains than available slots, add up to the limit and list the rest as "not added, monitor slots full".
 - Default monitor tools are `whois,dns` only.
-- Page tracking (`web_fetch`) requires separate user consent. Before enabling: explain that the AI client will fetch the page content and store a text snapshot. The fetch must be done in a read-only manner: no form submissions, no credential input, no file downloads. Before any `web_fetch`, check the domain's Safe Browsing / malware status with an equivalent provider if the host has one (DomainKits has no tool for this). If it flags the domain, skip `web_fetch` and note why. If no provider is available, skip `web_fetch` and note that safety could not be verified.
+- Page tracking (`web_fetch`) requires separate user consent. Before enabling: explain that the AI client will fetch the page content and store a text snapshot. The fetch must be done in a read-only manner: no form submissions, no credential input, no file downloads. Before any `web_fetch`, check the domain's Safe Browsing / malware status through the user's own Google Safe Browsing / Web Risk API connection if they have one (DomainKits has no tool for this). If it flags the domain, skip `web_fetch` and note why. If there is no such connection, skip `web_fetch` and note that safety could not be verified.
 - Monitor is on-demand: `action: get` triggers checks. It does not run in the background.
 
 ## Limitations

@@ -36,7 +36,7 @@ DomainKits MCP supplies discovery evidence through the tools below; it is not th
 - Current comparable for-sale listing leads, DomainKits: `market` / `aged` / `active`
 - Cross-TLD registration breadth for the value-bearing keyword, DomainKits: `tld_check`
 - Keyword registration activity as supporting context, DomainKits: `keywords_trends`
-- Safe Browsing / malware status before fetching the target domain: no DomainKits tool; use an equivalent provider if the host has one, otherwise mark it Unavailable
+- Safe Browsing / malware status before fetching the target domain: no DomainKits tool. If the user has their own Google Safe Browsing / Web Risk API connection (their own key, through a separate tool or MCP server), use it; otherwise mark it Unavailable
 - Web access or browser automation for verifying original marketplace listings
 - Current foreign-exchange reference when prices must be normalized across currencies
 
@@ -121,7 +121,7 @@ If the user explicitly asks for historical sales, present them in a separate app
 
 Use information already supplied by the user. Ask at most one question, and only when ambiguity about the value-bearing keyword or substitution frame would materially change the current substitute market.
 
-1. **Check scope, substitutability, and safety.** Determine whether the target is a compositional name with a defensible substitute market, rather than an exact single-keyword, pure short, coined, fixed-target, brand-dependent, or asset-inclusive case. Check the target's Safe Browsing / malware status before fetching it, when a provider is available. Never fetch a domain flagged as malicious, phishing, or malware-hosting. For a clean or unavailable safety result, inspect the root domain to distinguish an active business from parking, a for-sale lander, login wall, TLS failure, or unreachable site. Stop if the target is out of scope.
+1. **Check scope, substitutability, and safety.** Determine whether the target is a compositional name with a defensible substitute market, rather than an exact single-keyword, pure short, coined, fixed-target, brand-dependent, or asset-inclusive case. Check the target's Safe Browsing / malware status before fetching it, when the user's own Google API connection is available. Never fetch a domain flagged as malicious, phishing, or malware-hosting. For a clean or unavailable safety result, inspect the root domain to distinguish an active business from parking, a for-sale lander, login wall, TLS failure, or unreachable site. Stop if the target is out of scope.
 
 2. **Identify the value center and substitution frame.** Record the primary value-bearing keyword, modifier, TLD, intended meaning, naming purpose, characteristics that substitutes must preserve, and any ambiguity. Do not continue with an unresolved material ambiguity.
 
