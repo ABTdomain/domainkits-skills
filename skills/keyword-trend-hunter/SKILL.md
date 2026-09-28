@@ -25,7 +25,7 @@ This skill evaluates trends within the global, general-purpose open domain marke
 
 This model does not claim a non-.com ecosystem cannot be active. It means such activity has not been validated as a broad open-market domain trend. Extension-native ecosystems require a separate model.
 
-Independent participation, not raw `.com` count. A large `.com` block created through one concentrated pattern is not broad participation. Read the cohort from seven signals together: absolute `.com` count, `com_ratio`, registrar concentration, naming-pattern diversity, persistence across windows, low-base status, and single-TLD concentration. Registrar concentration is a necessary participant-diversity proxy, not registrant identity or a direct participant count. Use the trend provider's aggregate registrar distribution; use `nrds` only for the domain-row signals it actually returns.
+Independent participation, not raw `.com` count. A large `.com` block created through one concentrated pattern is not broad participation. Read the cohort from seven signals together: absolute `.com` count, `.com` share, registrar concentration, naming-pattern diversity, persistence across windows, low-base status, and single-TLD concentration. Registrar concentration is a necessary participant-diversity proxy, not a direct participant count. Use the trend provider's aggregate registrar distribution; use `nrds` only for the domain-row signals it actually returns.
 
 ## Event-cohort integrity
 
@@ -42,11 +42,11 @@ The following bands are heuristic starting points, not statistical laws. Treat a
 
 Data semantics: all ratios and concentration metrics are calculated from registrations contributing to the detected keyword spike, not from the total installed domain base. They therefore describe revealed choices within the incremental event cohort.
 
-- `com_ratio`: core-market participation. Roughly, higher (around 0.15 and up) is consistent with genuine open-market interest; very low (around 0.05 and below) is consistent with bulk activity on cheap TLDs.
-- `most_tld_ratio`: single-suffix concentration. High (around 0.7 and up) on a non-.com TLD is consistent with concentration in one suffix rather than broad demand.
-- `digit_ratio`: naming-structure signal. High (around 0.2 and up) is consistent with template or bulk-driven registration.
+- `.com` share: core-market participation. Roughly, higher (around 15% and up) is consistent with genuine open-market interest; very low (around 5% and below) is consistent with bulk activity on cheap TLDs.
+- Largest-TLD share: single-suffix concentration. High (around 70% and up) on a non-.com TLD is consistent with concentration in one suffix rather than broad demand.
+- Digit share: naming-structure signal. High (around 20% and up) is consistent with template or bulk-driven registration.
 - Registration persistence: measure as the number of distinct time windows (for example days within the cohort period) that carry new registrations, and the share of the cohort falling in its single busiest window. Persistent is roughly activity in several windows with no single window dominating (busiest-window share well under half); a single-day burst (one window holding most of the cohort) is not persistent. Show the per-window counts.
-- Registrar / provider concentration and pattern concentration: use source-computed registrar shares from `keywords_trends`, reporting the single largest registrar's share and the Top-3 cumulative share when each is returned, stated with the provider cohort size. Do not reconstruct Top-3 from `nrds` or from an incomplete registrar list. Measure pattern concentration from the aligned domain-row sample as the share following one repeated template. A largest-registrar share around half and up weakens the evidence of broad participation but does not establish how many actors exist. A dominant template is direct evidence of structural concentration. Interpret registrar concentration together with pattern, suffix, and time concentration; never convert it into a registrant count.
+- Registrar / provider concentration and pattern concentration: use source-computed registrar shares from `keywords_trends`, reporting the single largest registrar's share and the Top-3 cumulative share when each is returned, stated with the provider cohort size. Do not reconstruct Top-3 from `nrds` or from an incomplete registrar list. Measure pattern concentration from the aligned domain-row sample as the share following one repeated template. A largest-registrar share around half and up weakens the evidence of broad participation but does not establish how many actors exist. A dominant template is direct evidence of structural concentration. Interpret registrar concentration together with pattern, suffix, and time concentration; never convert it into a participant count.
 - Low base: flag whenever the cohort total is small enough that ratios are unstable (for example a cohort in the low tens or fewer, or any single suffix or window driven by only a handful of names). A low-base flag caps the outcome at uncertain regardless of how the ratios read.
 
 If these bands have been back-tested on historical data, state it and record: the calibration sample's date range; which TLDs the sample covers; the label used for a "validated" trend; and whether the bands are updated periodically. If they have not been back-tested, keep them as heuristic bands: the model supports the direction of each signal, but the specific numbers are not derived laws. Do not present a specific cutoff as a proven threshold without that calibration record.
@@ -73,8 +73,8 @@ Proceed end to end when the user names a keyword, requests a fixed number of tre
    - the provider-supplied cohort window or bucket definition, any provider data date, and the separate query observation timestamp. Never stamp or reconstruct event boundaries from the current date; if only a nominal rolling window is known, say so;
    - the coverage the source provides (which TLDs or feeds the cohort is drawn from, and whether it is a sample or claims completeness), so a difference between runs is not mistaken for a real change;
    - the spike / event-cohort total (how many new registrations define the trend);
-   - the absolute `.com` count in that cohort when the source returns it, alongside `com_ratio`; never derive a supposedly exact count from a rounded ratio, and mark the count `Unavailable` otherwise;
-   - the pre-computed structure metrics `digit_ratio`, `most_tld`, and `most_tld_ratio` (single-TLD concentration);
+   - the absolute `.com` count in that cohort when the source returns it, alongside the `.com` share; never derive a supposedly exact count from a rounded ratio, and mark the count `Unavailable` otherwise;
+   - the provider's structure metrics when returned: digit share, the largest TLD, and its share (single-TLD concentration);
    - a preliminary participation reading from the provider's available metrics, using the heuristic bands and showing every underlying figure; never label it the final open-market outcome while registrar concentration, pattern diversity, or persistence remains Pending;
    - a low-base flag whenever the cohort total is small.
    - registrar Top-1 and Top-3 shares from `keywords_trends` when returned; mark either metric `Unavailable` when absent rather than attempting to recreate it from `nrds`;
@@ -82,14 +82,14 @@ Proceed end to end when the user names a keyword, requests a fixed number of tre
 
 2. **Validate the event cohort.** For each selected keyword:
    - Apply the brand boundary and event-cohort integrity rules.
-   - Pull `nrds` for the aligned cohort and report its matching rule, returned count, pagination / result-cap status, naming-pattern diversity, hyphen / digit / length structure, repeated-template share, and the coarse time clustering supported by `registered_date` or the available recency buckets. Do not report registrar Top-1 or Top-3 from `nrds`. If it cannot be aligned to the trend record, keep it supplemental and make the outcome uncertain rather than merging unlike samples.
+   - Pull `nrds` for the aligned cohort and report its matching rule, returned count, pagination / result-cap status, naming-pattern diversity, hyphen / digit / length structure, repeated-template share, and the coarse time clustering supported by its day-level registration dates or the available recency buckets. Do not report registrar Top-1 or Top-3 from `nrds`. If it cannot be aligned to the trend record, keep it supplemental and make the outcome uncertain rather than merging unlike samples.
    - Apply the fixed outcome order to all seven signals. Report the outcome, confidence, exact figures, cohort dates, observation date, coverage, and unavailable fields.
    - If the user requests search-audience, advertiser, supply, offer, transaction, or catalyst evidence for the chosen keyword, use `keyword-intel`; do not rebuild those layers here.
 
 3. **Surface lifecycle candidates when requested.** Skip this phase for a brand-specific keyword. Filter every result through the same keyword-matching rule used for the event cohort:
    - `deleted` for dropped names, each re-confirmed registrable with `bulk_available`.
    - `expired` only when the user accepts backorder (confirm lifecycle / provider).
-   - `aged` with `has_sale=true` for current listings (a listing, not a sale).
+   - `aged` filtered to for-sale names, for current listings (a listing, not a sale).
    Present each candidate with: domain; exact keyword component and position; matching category (exact / hyphen-delimited / unambiguous concatenation); relation to the validated trend; lifecycle stage; acquisition path; verification source and result; price type, amount, currency, and date where applicable; observation date; and any brand-collision caveat. Exclude ambiguous matches. Mark unavailable fields explicitly. Present candidates as options, not recommendations.
 
 ## Next steps
@@ -100,7 +100,7 @@ Only if the user asks: use `keyword-intel` for a full evidence analysis of a sel
 
 - Judge trends against the global open domain market by aligned new-registration evidence; `.com` is necessary confirmation, not sufficient proof and not evidence of aftermarket transactions.
 - Keep `keywords_trends` and `nrds` in one event cohort when their provider window, data date, coverage, and keyword-match semantics can align. Otherwise do not merge them and cap the outcome at uncertain. Never fabricate exact event boundaries.
-- Read all seven signals together. Registrar concentration is a participant-diversity proxy, not registrant identity or participant count; interpret it with pattern, suffix, and time concentration.
+- Read all seven signals together. Registrar concentration is a participant-diversity proxy, not a participant count; interpret it with pattern, suffix, and time concentration.
 - Compute each derivable signal a fixed, disclosed way so runs are reproducible: persistence as distinct active windows and busiest-window share; pattern concentration as largest-template share; low-base as a small-cohort flag. Read registrar concentration as the provider-reported largest-registrar and Top-3 shares from `keywords_trends`, without reconstructing missing distribution data. Show the underlying figures, never a bare "high / low", and do not switch measures between runs. A set low-base flag caps the outcome at uncertain.
 - Thresholds are heuristic bands, not statistical laws; show the figures, treat edge values as uncertain, and only call a cutoff proven if a calibration record exists.
 - Apply the fixed outcome order: brand-specific, uncertain, not validated, concentrated, then validated. Mixed evidence is uncertain.

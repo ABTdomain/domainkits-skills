@@ -36,11 +36,13 @@ DomainKits MCP supplies discovery evidence through the tools below; it is not th
 - Current comparable for-sale listing leads, DomainKits: `market` / `aged` / `active`
 - Cross-TLD registration breadth for the value-bearing keyword, DomainKits: `tld_check`
 - Keyword registration activity as supporting context, DomainKits: `keywords_trends`
-- Safe Browsing / malware status before fetching the target domain: no DomainKits tool. If the user has their own Google Safe Browsing / Web Risk API connection (their own key, through a separate tool or MCP server), use it; otherwise mark it Unavailable
+- URL threat check before fetching the target domain: DomainKits does not provide one. Use a threat-check tool the user has connected; otherwise mark it Unavailable
 - Web access or browser automation for verifying original marketplace listings
 - Current foreign-exchange reference when prices must be normalized across currencies
 
-Optional follow-up capability, used only if the user asks: `monitor` for price tracking.
+**Fetch rule.** Before fetching a domain's pages, run the threat check when a threat-check tool is connected, and never fetch a domain it flags. If no threat-check tool is connected, tell the user the domain's safety is unverified and fetch only with their go-ahead. Fetch read-only: no form submissions, no credential input, no file downloads.
+
+Optional follow-up capability, used only if the user asks: `monitor` to watch the target domain for WHOIS, DNS, or page changes.
 
 ## Core model
 
@@ -121,11 +123,11 @@ If the user explicitly asks for historical sales, present them in a separate app
 
 Use information already supplied by the user. Ask at most one question, and only when ambiguity about the value-bearing keyword or substitution frame would materially change the current substitute market.
 
-1. **Check scope, substitutability, and safety.** Determine whether the target is a compositional name with a defensible substitute market, rather than an exact single-keyword, pure short, coined, fixed-target, brand-dependent, or asset-inclusive case. Check the target's Safe Browsing / malware status before fetching it, when the user's own Google API connection is available. Never fetch a domain flagged as malicious, phishing, or malware-hosting. For a clean or unavailable safety result, inspect the root domain to distinguish an active business from parking, a for-sale lander, login wall, TLS failure, or unreachable site. Stop if the target is out of scope.
+1. **Check scope, substitutability, and safety.** Determine whether the target is a compositional name with a defensible substitute market, rather than an exact single-keyword, pure short, coined, fixed-target, brand-dependent, or asset-inclusive case. Apply the fetch rule to the target, and never fetch it if the threat check flags it as malicious, phishing, or malware-hosting. When a fetch is allowed, inspect the root domain to distinguish an active business from parking, a for-sale lander, login wall, TLS failure, or unreachable site. If the user declines an unverified fetch, mark the site check Unavailable and state that the active-website scope condition is unverified. Stop if the target is out of scope.
 
 2. **Identify the value center and substitution frame.** Record the primary value-bearing keyword, modifier, TLD, intended meaning, naming purpose, characteristics that substitutes must preserve, and any ambiguity. Do not continue with an unresolved material ambiguity.
 
-3. **Build the listing pool.** Query `market` with `status=forsale`, then use `aged` with `has_sale=true` and `active` with `status=forsale` as additional sources. Search the exact keyword at the start and end. Do not generate pattern-only substitutes.
+3. **Build the listing pool.** Query `market` filtered to for-sale listings, then use `aged` and `active` with the same for-sale filter as additional sources. Search the exact keyword at the start and end. Do not generate pattern-only substitutes.
 
 4. **Verify and classify.** Verify original listings where possible, deduplicate, label listing type and verification status, normalize currency when possible, and assign each retained item to comparable tier 1, 2, or 3.
 

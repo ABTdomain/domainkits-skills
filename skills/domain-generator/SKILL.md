@@ -16,7 +16,7 @@ Modern naming does not require every name to describe the product literally. A s
 
 ## Evidence discipline
 
-- **Availability is a point-in-time signal.** Only a successful per-domain result whose explicit status is `available` qualifies as verified. `registered`, `expiring`, and `reserved` are not registrable; `unknown`, a missing domain row, a failed request, or an unrecognized response is not verified. Every verified domain must carry the observation timestamp. Describe it as "available at check time", never as guaranteed registrable until registration completes.
+- **Availability is a point-in-time signal.** Only a successful per-domain result that explicitly reports the domain as available qualifies as verified. Any other status, a missing domain row, a failed request, or an unrecognized response does not qualify. Every verified domain must carry the observation timestamp. Describe it as "available at check time", never as guaranteed registrable until registration completes.
 - **Respect the creative constraint.** Treat the full input as the source string. Identify possible roots and modifiers as interpretations, not facts (for example, `getflow` may be root `flow` with modifier `get`, or the whole brand `getflow`). Never silently discard a user-required word. When the input is only a conceptual seed, candidates may move beyond the literal string while preserving an explainable connection.
 - **Creative meaning is interpretation.** Present metaphors, emotional readings, sound symbolism, and visual impressions as intended creative rationale, not universal fact. Deliberate ambiguity is allowed; accidental incoherence is not.
 - **Price is data, not a guarantee.** Report prices with currency, check date, and provider; note standard vs premium and, where available, renewal price.
@@ -91,7 +91,7 @@ Use the keyword, TLD, audience, industry, and style the user has already supplie
    - Fit the intended audience and brand character; do not require an abstract name to describe the industry literally. For regulated industries such as medical or finance, flag suggestive or misleading wording rather than blanket-excluding every imaginative term.
    - Availability alone does not make a name worth recommending.
 
-5. **Verify and curate.** Run `bulk_available` on the filtered candidates. Retain in the verified shortlist only candidates with a successful per-domain `available` status. Treat `unknown`, missing rows, errors, and undocumented values as unverified, never as available. From the explicitly available candidates, present only the 5 to 10 strongest. Preserve creative diversity in the shortlist rather than returning several versions of the same formula. If availability removes all strong non-literal directions, generate fresh candidates instead of filling the list with weak literal leftovers.
+5. **Verify and curate.** Run `bulk_available` on the filtered candidates. Retain in the verified shortlist only candidates that `bulk_available` explicitly reports as available. Treat any other, missing, failed, or unrecognized result as unverified, never as available. From the explicitly available candidates, present only the 5 to 10 strongest. Preserve creative diversity in the shortlist rather than returning several versions of the same formula. If availability removes all strong non-literal directions, generate fresh candidates instead of filling the list with weak literal leftovers.
 
 6. **Iterate by territory.** On feedback, generate fresh names within the preferred semantic distance, image, sound, or construction method. Do not merely swap prefixes. Use domain-name-advisor in taken-target mode if the user wants deleted, expired, aged, or other acquisition-path options.
 
@@ -105,13 +105,13 @@ Present each shortlisted candidate with:
 - **Creative concept**: the intended image, feeling, metaphor, attitude, or brand story, explicitly labeled as creative rationale.
 - **Connection to the seed**: what literal constraint, meaning, sound, pattern, or valued feature it preserves.
 - **Why it works**: memorability, pronunciation, spelling, rhythm, visual form, audience fit, and distinctiveness.
-- **Availability at check time**: the explicit per-domain `available` result from `bulk_available`, with observation timestamp. Do not use this label for `unknown`, missing, or failed results.
+- **Availability at check time**: the explicit per-domain available result from `bulk_available`, with observation timestamp. Do not use this label for any other, missing, or failed result.
 - **Standard / premium status**: whether the registry prices it as a premium name.
 - **Registration and renewal price**: first-year and renewal price where available, with currency.
 - **Provider and observation date**: the source of the price and when it was checked.
 - **Language / brand caveat**: any cross-language meaning issue or possible brand collision noted.
 
-If the availability tool fails or returns `unknown`, missing, or unrecognized results, you may offer the affected creative candidates only in a separate group labeled "Availability not verified", with the returned status or error. Never mix them into the verified shortlist.
+If the availability tool fails or returns inconclusive, missing, or unrecognized results, you may offer the affected creative candidates only in a separate group labeled "Availability not verified", with the returned status or error. Never mix them into the verified shortlist.
 
 ## Key principles
 
@@ -121,7 +121,7 @@ If the availability tool fails or returns `unknown`, missing, or unrecognized re
 - Avoid template-driven startup cliches and availability-driven distortion.
 - Generate many internally, filter hard, present a small verified shortlist (5 to 10), not the full set.
 - Keep the final shortlist creatively diverse; do not return several names built from the same formula.
-- Availability is point-in-time: label every verified domain "available at check time" only after an explicit per-domain `available` result, with a timestamp; keep inconclusive results in the separate unverified group.
+- Availability is point-in-time: label every verified domain "available at check time" only after an explicit per-domain available result, with a timestamp; keep inconclusive results in the separate unverified group.
 - Respect user-required strings; treat roots, modifiers, metaphors, and sound readings as interpretations, not facts.
 - Report price with standard/premium status, first-year and renewal price, currency, provider, and date.
 - Do not default `.ai` / `.io` / `.app` for every short keyword; weigh industry, audience, region, and renewal cost.

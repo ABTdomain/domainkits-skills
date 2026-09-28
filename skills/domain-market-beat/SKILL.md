@@ -88,7 +88,7 @@ Active market offers table columns: Domain, Offer type (current auction bid / as
 
 ## Next steps
 
-Let the user choose whether to go deeper. Optional follow-ups: for an emerging keyword, use `nrds` to inspect aggregate registration patterns, `deleted` for dropped candidates that still require availability verification, and `expired` for expiring / backorder inventory. After a notable sale, use `nrds` to look for a registration wave, and `aged` only to inspect related for-sale inventory (a rise in for-sale listings is not proof a sale triggered a registration wave). For a notable expiration, track its status with the monitoring tool. Do not attempt to bypass WHOIS privacy or identify private registrants.
+Let the user choose whether to go deeper. Optional follow-ups: for an emerging keyword, use `nrds` to inspect aggregate registration patterns, `deleted` for dropped candidates that still require availability verification, and `expired` for expiring / backorder inventory. After a notable sale, use `nrds` to look for a registration wave, and `aged` only to inspect related for-sale inventory (a rise in for-sale listings is not proof a sale triggered a registration wave). For a notable expiration, track its status with the monitoring tool. Report domains and events only; do not look up or report personal details of the people behind them.
 
 ## Key principles
 

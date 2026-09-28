@@ -15,6 +15,13 @@ Scan the domain landscape around a brand, evaluate each similar registration ind
 
 **Supporting (per-domain, conditional):** `whois`, `dns`, `available`, `bulk_available`
 
+**Needs from the host:**
+
+- URL threat check: DomainKits does not provide one. Use a threat-check tool the user has connected; if none is connected, mark the threat check Unavailable.
+- Web fetch, only for page tracking and only under the fetch rule below.
+
+**Fetch rule.** Before fetching a domain's pages, run the threat check when a threat-check tool is connected, and never fetch a domain it flags. If no threat-check tool is connected, tell the user the domain's safety is unverified and fetch only with their go-ahead. Fetch read-only: no form submissions, no credential input, no file downloads.
+
 ## Input
 
 - Domain (e.g. `acmebank.com`): prefix = brand term, domain used directly for `typosquat`.
@@ -22,14 +29,14 @@ Scan the domain landscape around a brand, evaluate each similar registration ind
 
 ## Evidence rules
 
-- `typosquat` returns variants with an optional `registered_date`. WITH `registered_date` = confirmed registered. WITHOUT = unknown status (not "available", not confirmed registered). For unknown-status variants worth investigating, call `whois` or `available` to resolve.
-- `prefix_tld_count` is a current count, not a time series. Cannot prove bulk registration alone.
-- `tld_check` returns `might_available`, not confirmed availability. Verify with `available` or `bulk_available` before recommending defensive registration.
+- A `typosquat` variant that comes with a registration date is confirmed registered. One without a date has unknown status: not "available", and not confirmed registered. For unknown-status variants worth investigating, call `whois` or `available` to resolve.
+- The cross-TLD count is a current count, not a time series. It cannot prove bulk registration alone.
+- A "possibly available" result from `tld_check` is not confirmed availability. Verify with `available` or `bulk_available` before recommending defensive registration.
 - WHOIS privacy is neutral, not a risk signal.
-- `nrds` returns domain and registration date. TLD is parsed from the domain string, not a separate field. `nrds` does NOT return registrar. Registrar data requires `whois`.
-- `nrds` returns paginated results. The first page is not the full dataset. Note `total_found` from the response and state how many pages were checked vs. total available. Do not present one page as the complete picture.
+- Registrar data comes from `whois`, not from `nrds`.
+- `nrds` results are paged; the first page is not the full dataset. State the total found and how many pages were checked. Do not present one page as the complete picture.
 - Mutation type (omission, transposition, etc.) is a fact from `typosquat`. Visual similarity to the brand is a model judgment, not tool output. Classify it as inference, not fact.
-- Safe Browsing / malware status has no DomainKits tool; use the user's own Google Safe Browsing / Web Risk API connection if they have one. A hit is a detection signal, not a legal conclusion; a flagged domain may be benign (false positive, shared hosting, stale blocklist). A clean result is not confirmed safe (coverage gaps, new threats, evasion). Report hits with the specific threat types returned.
+- A threat-check hit is a detection signal, not a legal conclusion; a flagged domain may be benign (false positive, shared hosting, stale blocklist). A clean result is not confirmed safe (coverage gaps, new threats, evasion). Report hits with the specific threat types returned.
 
 ## Workflow
 
@@ -37,9 +44,9 @@ One tool failing marks that section Unavailable. Continue with the rest.
 
 ### Phase 1: Surface scan (parallel)
 
-1. **Typosquat.** Call `typosquat` with the primary domain. Collect variants that have `registered_date` (confirmed registered). Note variants without `registered_date` but with high `prefix_tld_count` as unknown-status for possible follow-up.
+1. **Typosquat.** Call `typosquat` with the primary domain. Collect variants with a registration date (confirmed registered). Note variants without a date but with a high cross-TLD count as unknown-status for possible follow-up.
 
-2. **Recent registrations.** Call `nrds` with brand keyword, `position: all`, sort `reg_date_desc`. Note `total_found` and how many results were reviewed (page 1 = first 10). If total_found is large, state that only the first page was checked. Note any clusters of registrations on the same date as context (date clustering alone is weak evidence).
+2. **Recent registrations.** Call `nrds` for the brand keyword anywhere in the name, newest first. Note the total found and how many results were reviewed. If the total is large, state that only the first page was checked. Note any clusters of registrations on the same date as context (date clustering alone is weak evidence).
 
 3. **Cross-TLD footprint.** Call `tld_check` with brand prefix for per-TLD registration status.
 
@@ -47,9 +54,9 @@ One tool failing marks that section Unavailable. Continue with the rest.
 
 Typosquat can return hundreds of variants. Before any lookups, determine budget.
 
-**Step 1: Check quota.** Call `usage` first. For each tool group used in this phase (`whois`, `dns`, `available`, plus `bulk_available` if defensive candidates need verification), read `daily_remaining` and `rate_per_minute`. When a group shows `daily_unlimited: true`, `daily_remaining` is absent; treat that group as uncapped. Investigation budget = `min(daily_remaining)` across `whois` and `dns` (the two mandatory per-domain tools), or 10 when both are uncapped. Cap at 10 without user confirmation.
+**Step 1: Check quota.** Call `usage` first and read the remaining daily quota and per-minute rate for each tool used in this phase (`whois`, `dns`, `available`, plus `bulk_available` if defensive candidates need verification). A tool with no daily cap counts as uncapped. The investigation budget is the smaller of the remaining `whois` and `dns` quotas (the two mandatory per-domain tools), or 10 when both are uncapped. Cap at 10 without user confirmation.
 
-**Step 2: Triage.** Select confirmed-registered variants by priority: recent `registered_date`, high `prefix_tld_count`, close mutation type (e.g. single-character omission or homoglyph substitution are closer mutations than TLD-swap). Visual similarity is an inference, not a fact; label it accordingly. State total found. Limit selection to the budget from Step 1.
+**Step 2: Triage.** Select confirmed-registered variants by priority: recent registration date, high cross-TLD count, close mutation type (e.g. single-character omission or homoglyph substitution are closer mutations than TLD-swap). Visual similarity is an inference, not a fact; label it accordingly. State total found. Limit selection to the budget from Step 1.
 
 **Step 3: Resolve unknowns (within budget).** For unknown-status variants that look high-priority, call `whois` or `available` to determine registration status. These calls count against the same budget. Only resolve unknowns if budget remains after reserving slots for confirmed-registered variants.
 
@@ -60,32 +67,31 @@ For each selected domain:
 
 1. **WHOIS.** Call `whois`. Extract registration date, registrar, expiry, nameservers. Report as facts.
 2. **DNS.** Call `dns`. Extract A/AAAA/CNAME records, MX, NS. Report as facts. DNS alone cannot reliably distinguish parking pages from active sites (a domain with no A record may have AAAA or CNAME; parking IPs are not enumerated here). Treat DNS as context, not classification.
-3. **Safety.** If the user has connected their own Google Safe Browsing / Web Risk API, check the variant and report its threat types as detection signals. A hit does not confirm malice; no hit does not confirm safety. If there is no such connection, note it in the report and continue.
-4. **Assessment.** Note mutation type as fact. Note visual similarity as inference. Note registration timing as fact. Note safety flags as detection signals. Do not infer intent.
+3. **Threat check.** If a threat-check tool is connected, check the variant and report its threat types as detection signals. A hit does not confirm malice; no hit does not confirm safety. Otherwise mark the threat check Unavailable in the report and continue.
+4. **Assessment.** Note mutation type as fact. Note visual similarity as inference. Note registration timing as fact. Note threat-check hits as detection signals. Do not infer intent.
 
 ### Phase 3: Report and next steps
 
 **Report structure:**
 
 1. **Summary.** Variants scanned, confirmed registered, investigated, defensive candidates. One paragraph.
-2. **Registered variants.** Per-domain data: mutation type, registered_date, registrar (from whois), nameservers, DNS records, safety flags (if checked). Neutral framing. These are domains worth monitoring, not confirmed infringers.
-3. **Recent registrations.** NRDs containing brand term from `nrds`, with dates. State total_found and pages checked.
-4. **Unconfirmed defensive candidates.** TLDs where `tld_check` returned `might_available`. Ranked by importance (.com/.net/.org first). Availability is unconfirmed; offer to verify with `available`/`bulk_available`.
+2. **Registered variants.** Per-domain data: mutation type, registration date, registrar (from whois), nameservers, DNS records, threat-check result (if checked). Neutral framing. These are domains worth monitoring, not confirmed infringers.
+3. **Recent registrations.** NRDs containing brand term from `nrds`, with dates. State the total found and pages checked.
+4. **Unconfirmed defensive candidates.** TLDs where `tld_check` reported the name as possibly available. Ranked by importance (.com/.net/.org first). Availability is unconfirmed; offer to verify with `available`/`bulk_available`.
 5. **Not investigated.** How many variants were skipped, why (quota, unknown status, lower priority).
 6. **Unavailable evidence.** Any tools that failed or returned errors during the scan. State which section is affected and what data is missing.
 
 **Monitoring offer.** After the report, offer to set up `monitor` on registered variants the user wants to track.
 
-- Check `tier` from the Phase 2 `usage` response (call `usage` if it was not called). If tier is `guest`, monitoring is not available. The report is the full deliverable. Mention that a registered account unlocks monitoring. Do not call `preferences` for guests.
-- For registered users (any non-guest tier): call `preferences action:get` to check memory status. Current monitor count is `monitors_count` (0 if absent). The tier limit comes from the `usage` response field `monitor.max_items` (`monitors_summary.max` in preferences appears only when at least one monitor exists). Remaining slots = `monitor.max_items` - `monitors_count`. If 0 slots remain, do not offer monitoring; inform the user their monitor slots are full and mention upgrade options.
-- If memory is not enabled, ask the user: "Would you like me to enable memory so I can set up monitoring? I'll call `preferences action:set memory_enabled:true`." Only proceed with their consent.
-- Create: `monitor` with `action: set`, `domain: <domain>`, `tools: whois,dns`, `note: <context>`. Only offer to add up to the number of remaining slots. If the user selects more domains than available slots, add up to the limit and list the rest as "not added, monitor slots full".
-- Default monitor tools are `whois,dns` only.
-- Page tracking (`web_fetch`) requires separate user consent. Before enabling: explain that the AI client will fetch the page content and store a text snapshot. The fetch must be done in a read-only manner: no form submissions, no credential input, no file downloads. Before any `web_fetch`, check the domain's Safe Browsing / malware status through the user's own Google Safe Browsing / Web Risk API connection if they have one (DomainKits has no tool for this). If it flags the domain, skip `web_fetch` and note why. If there is no such connection, skip `web_fetch` and note that safety could not be verified.
-- Monitor is on-demand: `action: get` triggers checks. It does not run in the background.
+- Monitoring needs a registered DomainKits account. Check the tier in the `usage` response (call `usage` if it was not called). For a guest, the report is the full deliverable: mention that a registered account unlocks monitoring, and do not call `preferences`.
+- For a registered user, check memory status with `preferences`, and work out the remaining monitor slots from the tier's monitor limit in `usage` and the monitors already set. If no slots remain, do not offer monitoring; say the slots are full and mention upgrade options.
+- If memory is not enabled, ask the user before turning it on with `preferences`. Only proceed with their consent.
+- Create monitors with `monitor`, checking WHOIS and DNS by default, with a short note on why each domain is watched. Offer only as many domains as slots remain. If the user selects more, add up to the limit and list the rest as "not added, monitor slots full".
+- Page tracking requires separate user consent. Before enabling it, explain that the AI client will fetch the page content and store a text snapshot. Page fetches follow the fetch rule above.
+- Monitors run when checked, not in the background.
 
 ## Limitations
 
 - Typosquat covers common mutations (omission, transposition, keyboard-adjacent replacement, insertion, repetition, hyphenation, homoglyph, vowel-swap, plural, TLD-swap). IDN homograph and multi-language variants are not covered.
-- This skill evaluates domains individually. It cannot determine whether multiple domains belong to the same registrant.
+- This skill evaluates domains individually. It does not attribute domains to any person or organization.
 - Visual similarity is a model inference, not a measured value. Different models may assess it differently.
