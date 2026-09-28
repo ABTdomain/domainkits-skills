@@ -66,14 +66,14 @@ This is the structure for a full-domain analysis. For a narrow request (per the 
 2. **Registration**: registrar, creation/expiry dates, status codes.
 3. **DNS and email**: A/AAAA, NS, MX, TXT, CNAME, CAA as found; note email configuration presence as a fact, not proof of active use.
 4. **Website status**: live content, parked, redirect (with target), TLS/login/anti-bot state.
-5. **Threat check**: the result from the user's connected threat-check tool, or Unavailable. If flagged as malicious, phishing, or malware-hosting, this is the leading finding: give the threat types, state that the domain was not fetched, and that registration, acquisition, or use is not advised while the flag stands. Note that the flag is a detection signal, not proof.
+5. **Threat check**: the result from the user's connected threat-check tool, or Unavailable. If the domain is flagged, this is the leading finding: give the threat types, state that the domain was not fetched and that registration, acquisition, or use is not advised while the flag stands, and that the flag is a detection signal, not proof.
 6. **Backlinks and SEO**: rank, referring domains, spam risk, and link-type distribution only when the source provides it (otherwise mark it Not Provided).
 7. **Cross-TLD footprint**: counts, TLDs checked, registrar pattern (fact vs inference).
-8. **Market and legal context**: sales history (public sale vs asking price), news, disputes (for UDRP: case number, outcome, dispute type, and the panel's three-element findings), each with source and date.
+8. **Market and legal context**: sales history (public sale vs asking price), news, disputes reported as workflow step 4 specifies, each with source and date.
 9. **Evidence gaps and limitations**: every section marked Unavailable, and what could not be determined.
 10. **Sources and observation timestamps**: external sources and the dates each fact was observed.
 
-Do not make buy / don't-buy judgments, with one exception: a domain flagged by the threat check as malicious, phishing, or malware-hosting is reported as not advised for registration, acquisition, or use. Otherwise present evidence and let the user decide.
+Do not make buy / don't-buy judgments, with one exception: a domain the threat check flags is reported as not advised for registration, acquisition, or use. Otherwise present evidence and let the user decide.
 
 ## Next steps
 
@@ -86,9 +86,8 @@ If the user's goal is not already known, ask one concise follow-up question. Oth
 
 ## Key principles
 
-- Never fetch a domain that the threat check has flagged as malicious, phishing, or malware-hosting, and without a threat check, fetch only with the user's go-ahead. A flag skips the fetch, not the analysis: continue the non-fetch sections. Make the threat flag the leading finding, treat it as a detection signal rather than proof, and default the assessment to not advised for registration, acquisition, or use.
-- Classify every material finding as fact, inference, or unknown. Use "may indicate" / "is consistent with" for inference.
-- Absence of a record is never proof of absence. Do not read "not found" as "does not exist".
-- Every query is independent; one failure marks a section Unavailable and does not abort the report.
+- Classify every material finding as fact, inference, or unknown; absence of a record is not proof of absence.
+- Each query is independent: a failure marks its section Unavailable and does not stop the report.
+- A threat flag skips the fetch, not the analysis, and leads the report as a detection signal, not proof.
 - Every time-sensitive claim carries its observation date; every external claim carries its source.
-- When a domain is for sale, name the marketplace so the user can verify it. Do not add referral or affiliate links.
+- When a domain is for sale, name the marketplace so the user can verify it; do not add referral or affiliate links.

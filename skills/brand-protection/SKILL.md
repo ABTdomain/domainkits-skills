@@ -46,7 +46,7 @@ One tool failing marks that section Unavailable. Continue with the rest.
 
 1. **Typosquat.** Call `typosquat` with the primary domain. Collect variants with a registration date (confirmed registered). Note variants without a date but with a high cross-TLD count as unknown-status for possible follow-up.
 
-2. **Recent registrations.** Call `nrds` for the brand keyword anywhere in the name, newest first. Note the total found and how many results were reviewed. If the total is large, state that only the first page was checked. Note any clusters of registrations on the same date as context (date clustering alone is weak evidence).
+2. **Recent registrations.** Call `nrds` for the brand keyword anywhere in the name, newest first, and report paging as the evidence rules require. Note any clusters of registrations on the same date as context (date clustering alone is weak evidence).
 
 3. **Cross-TLD footprint.** Call `tld_check` with brand prefix for per-TLD registration status.
 
@@ -67,7 +67,7 @@ For each selected domain:
 
 1. **WHOIS.** Call `whois`. Extract registration date, registrar, expiry, nameservers. Report as facts.
 2. **DNS.** Call `dns`. Extract A/AAAA/CNAME records, MX, NS. Report as facts. DNS alone cannot reliably distinguish parking pages from active sites (a domain with no A record may have AAAA or CNAME; parking IPs are not enumerated here). Treat DNS as context, not classification.
-3. **Threat check.** If the user agreed to use a connected threat-check tool, check the variant and report its threat types as detection signals. A hit does not confirm malice; no hit does not confirm safety. Otherwise mark the threat check Unavailable in the report and continue.
+3. **Threat check.** If the user agreed to use a connected threat-check tool, check the variant and report its threat types as detection signals (see the evidence rules). Otherwise mark the threat check Unavailable in the report and continue.
 4. **Assessment.** Note mutation type as fact. Note visual similarity as inference. Note registration timing as fact. Note threat-check hits as detection signals. Do not infer intent.
 
 ### Phase 3: Report and next steps

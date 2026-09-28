@@ -72,7 +72,7 @@ Validate by the right source: registrar, expiry, and lifecycle status with `whoi
 ## Output structure
 
 1. **Scope, cutoff time and timezone**: the window, the cutoff, the timezone, and when queries ran.
-2. **Top headlines by source tier**: highest-tier, in-window items, each labeled with its verification status; a high source tier does not by itself mean the event is a verified completed one.
+2. **Top headlines by source tier**: highest-tier, in-window items, each labeled with its verification status.
 3. **Notable sales table**: completed and reported sale events only; see columns below.
 4. **Active market offers table**: current bids, asking / listing prices, and open auctions; see columns below. These are offers, not sales, and never appear in the sales table.
 5. **Registration trend table**: current, prior, absolute change, percentage change, baseline window, sample size, tool rating.
@@ -82,9 +82,9 @@ Validate by the right source: registrar, expiry, and lifecycle status with `whoi
 9. **Sources with event and publication dates**: per item, with source tier.
 10. **Market-intelligence disclaimer**: "This is a market-intelligence briefing for reference only, not investment advice. Public sales data is disclosure-biased and does not represent the whole market; figures reflect only what was verifiable at the cutoff time."
 
-Notable sales table columns (completed and reported sale events only): Domain, Sale type (verified completed sale / publicly reported sale / finalized auction result), Price and currency, Venue, Event date, Publication date, Source, Source tier (1-4), Verification status (completed / reported / pending). Source tier and verification status are two separate columns: tier measures how authoritative the source is, verification status measures the state of the event; a Tier 1 source can still carry a reported or pending event. Current bids and listing prices do not belong in this table.
+Notable sales table columns (completed and reported sale events only): Domain, Sale type (verified completed sale / publicly reported sale / finalized auction result), Price and currency, Venue, Event date, Publication date, Source, Source tier (1-4), Verification status (completed / reported / pending).
 
-Active market offers table columns: Domain, Offer type (current auction bid / asking or listing price / minimum offer / lease-to-own), Price and currency, Venue, Observation date, Source, Source tier (1-4). An offer is not a transaction; never promote a row here into the sales table without completed-sale evidence.
+Active market offers table columns: Domain, Offer type (current auction bid / asking or listing price / minimum offer / lease-to-own), Price and currency, Venue, Observation date, Source, Source tier (1-4). Never promote a row here into the sales table without completed-sale evidence.
 
 ## Next steps
 
@@ -92,11 +92,10 @@ Let the user choose whether to go deeper. Optional follow-ups: for an emerging k
 
 ## Key principles
 
-- Anchor every briefing to an explicit window with cutoff time and timezone; build queries from the current date and query fresh, never from memory.
-- Classify every sale by type; never report a listing or current bid as a completed sale. Current bids and listing prices go in the separate active market offers table, not the sales table. Republished copies are one source.
-- Source tier and verification status are two separate fields, and headlines are ranked by tier, not marked "verified": a Tier 1 source can still carry a reported or pending event.
-- Lead with higher-tier sources; forums and social media stay in a separate Unverified section.
-- Report trend changes as figures (absolute and percentage, with baseline and sample size); avoid "significant" unless the tool measures it.
-- Separate Confirmed cause, Plausible context, and Unknown; watch low-base effects; registration signals are not end-user demand.
-- Do not over-infer movements: a transfer, a nameserver change, or a passed expiry is not a sale or a deletion. Validate registration status with `whois` and DNS state with `dns`, or report only the observed change.
-- Define why a domain is notable (short, common word, public sale history, known attention, clear status change); do not call it high-value without valuation evidence.
+- Anchor every briefing to an explicit window, cutoff time, and timezone; query fresh from the current date, never from memory.
+- Classify every sale by type, and keep offers out of the sales table.
+- Record source tier and verification status as separate fields; lead with higher tiers and keep unverified items apart.
+- Report trend changes as figures; do not call a move significant unless the tool measures it.
+- Separate confirmed causes, plausible context, and unknowns; registration signals are not end-user demand.
+- Do not over-infer movements; validate them with the right source or report only the observed change.
+- Say why a domain is notable; do not call it high-value without valuation evidence.

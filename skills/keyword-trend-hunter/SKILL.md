@@ -25,9 +25,9 @@ This skill evaluates trends within the global, general-purpose open domain marke
 
 This model does not claim a non-.com ecosystem cannot be active. It means such activity has not been validated as a broad open-market domain trend. Extension-native ecosystems require a separate model.
 
-Independent participation, not raw `.com` count. A large `.com` block created through one concentrated pattern is not broad participation. Read the cohort from nine signals together: absolute `.com` count, `.com` share, registrar concentration, nameserver concentration, naming-pattern diversity, persistence across windows, low-base status, single-TLD concentration, and sale-platform nameserver share. Registrar and nameserver concentration are participant-diversity proxies, not direct participant counts. Sale-platform nameserver share is the share of the cohort whose nameservers point at sale platforms; it is not a verified count of listings. Resale is normal market participation; a cohort dominated by sale-platform nameservers suggests speculation-led registration, and that reading is an inference.
+Independent participation, not raw `.com` count. A large `.com` block created through one concentrated pattern is not broad participation. Read the cohort from nine signals together: absolute `.com` count, `.com` share, registrar concentration, nameserver concentration, naming-pattern diversity, persistence across windows, low-base status, single-TLD concentration, and sale-platform nameserver share. Registrar and nameserver concentration are participant-diversity proxies, not direct participant counts; sale-platform nameserver share bears on how much of the participation is resale. Each signal is defined under Signal thresholds.
 
-The yardstick is a balanced free market: many independent participants across registrars, nameservers, TLDs, and naming patterns, over several windows, with end use and resale both present. A spike dominated by any one of them is concentrated. When the sale-platform nameserver share is high and nameserver concentration points at the same platforms, read the two as one finding (the inference that the keyword is being heavily speculated), not as two independent signals. Use the trend provider's aggregate registrar distribution; use `nrds` only for the domain-row signals it actually returns.
+The yardstick is a balanced free market: many independent participants across registrars, nameservers, TLDs, and naming patterns, over several windows, with end use and resale both present. A spike dominated by any one of them is concentrated.
 
 ## Event-cohort integrity
 
@@ -81,13 +81,13 @@ Proceed end to end when the user names a keyword, requests a fixed number of tre
    - the provider's structure metrics when returned: digit share, the largest TLD, and its share (single-TLD concentration);
    - a preliminary participation reading from the provider's available metrics, using the heuristic bands and showing every underlying figure; never label it the final open-market outcome while registrar concentration, pattern diversity, or persistence remains Pending;
    - a low-base flag whenever the cohort total is small.
-   - registrar Top-1 and Top-3 shares from `keywords_trends` when returned; mark either metric `Unavailable` when absent rather than attempting to recreate it from `nrds`;
+   - registrar Top-1 and Top-3 shares from `keywords_trends` when returned; mark either metric `Unavailable` when absent;
    - nameserver concentration (largest-nameserver share) and sale-platform nameserver share from `keywords_trends` when returned; mark either `Unavailable` when absent;
    Pattern diversity and detailed time structure come from `nrds` in step 2, so mark those fields Pending here. Two cohorts are comparable only when their provider window, data date, coverage, and keyword-match semantics align. If the user has not chosen a keyword or requested an end-to-end top-N analysis, ask which keyword(s) to validate; otherwise continue.
 
 2. **Validate the event cohort.** For each selected keyword:
    - Apply the brand boundary and event-cohort integrity rules.
-   - Pull `nrds` for the aligned cohort and report its matching rule, returned count, pagination / result-cap status, naming-pattern diversity, hyphen / digit / length structure, repeated-template share, and the coarse time clustering supported by its day-level registration dates or the available recency buckets. Do not report registrar Top-1 or Top-3 from `nrds`. If it cannot be aligned to the trend record, keep it supplemental and make the outcome uncertain rather than merging unlike samples.
+   - Pull `nrds` for the aligned cohort and report its matching rule, returned count, pagination / result-cap status, naming-pattern diversity, hyphen / digit / length structure, repeated-template share, and the coarse time clustering supported by its day-level registration dates or the available recency buckets. If it cannot be aligned to the trend record, keep it supplemental and make the outcome uncertain rather than merging unlike samples.
    - Apply the fixed outcome order to all nine signals. Report the outcome, confidence, exact figures, cohort dates, observation date, coverage, and unavailable fields.
    - If the user requests search-audience, advertiser, supply, offer, transaction, or catalyst evidence for the chosen keyword, use `keyword-intel`; do not rebuild those layers here.
 
@@ -103,14 +103,10 @@ Only if the user asks: use `keyword-intel` for a full evidence analysis of a sel
 
 ## Key principles
 
-- Judge trends against the global open domain market by aligned new-registration evidence; `.com` is necessary confirmation, not sufficient proof and not evidence of aftermarket transactions.
-- Keep `keywords_trends` and `nrds` in one event cohort when their provider window, data date, coverage, and keyword-match semantics can align. Otherwise do not merge them and cap the outcome at uncertain. Never fabricate exact event boundaries.
-- Read all nine signals together. Registrar and nameserver concentration are participant-diversity proxies, not participant counts; interpret them with pattern, suffix, and time concentration. Judge against a balanced free market: many independent participants, with end use and resale both present. A cohort dominated by sale-platform nameservers suggests speculation-led participation (an inference) and counts as concentrated; a high sale-platform nameserver share and nameserver concentration on the same platforms are one finding.
-- Compute each derivable signal a fixed, disclosed way so runs are reproducible: persistence as distinct active windows and busiest-window share; pattern concentration as largest-template share; low-base as a small-cohort flag. Read registrar concentration as the provider-reported largest-registrar and Top-3 shares, and nameserver concentration as the largest-nameserver share, from `keywords_trends`, without reconstructing missing distribution data. Show the underlying figures, never a bare "high / low", and do not switch measures between runs. A set low-base flag caps the outcome at uncertain.
-- Thresholds are heuristic bands, not statistical laws; show the figures, treat edge values as uncertain, and only call a cutoff proven if a calibration record exists.
-- Apply the fixed outcome order: brand-specific, uncertain, not validated, concentrated, then validated. Mixed evidence is uncertain.
-- Record returned sample size, pagination, result cap, completeness claim, time window, observation date, and TLD / feed coverage. Partial ratios are observed-sample ratios, not population claims.
-- Use one reproducible keyword-matching rule and exclude ambiguous segmentations from both cohort detail and candidate inventory.
-- Keep full known-keyword intelligence in `keyword-intel`; do not duplicate search, advertising, supply, transaction, or catalyst analysis here.
-- Do not surface candidates for a brand-specific keyword. A public-web collision check is not trademark clearance or legal advice.
-- Verify lifecycle by stage: `bulk_available` only for registrability; confirm `expired` backorderability and provider; treat a for-sale listing as a listing, not a sale. Surface options without recommending acquisition.
+- Judge each trend against a balanced free market by aligned new-registration evidence; `.com` is necessary confirmation, not sufficient proof.
+- Combine the trend record and `nrds` only when they describe the same event cohort; never fabricate event boundaries.
+- Read all nine signals together, show every underlying figure, and measure each signal the same way on every run; thresholds are heuristic bands, not laws.
+- Apply the fixed outcome order in Evidence discipline; mixed evidence is uncertain.
+- Record sample size, pagination, coverage, and observation dates; partial ratios are observed-sample ratios, not population claims.
+- Stop at the brand boundary, verify lifecycle candidates by stage, and present candidates as options, not recommendations.
+- Leave full known-keyword intelligence to `keyword-intel`.

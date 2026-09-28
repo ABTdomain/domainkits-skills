@@ -155,14 +155,10 @@ Compliance statement: "This is a substitution-based current listing analysis for
 ## Key principles
 
 - Apply the principle of substitution: position the target against what a flexible buyer can purchase now for the same naming purpose.
-- The value-bearing keyword defines the primary substitute neighborhood; construction pattern alone never does.
-- Use current verified same-keyword for-sale listings as the pricing evidence.
-- Identify the closest substitutes and equal-or-better substitution frontier; require named superiority before supporting a premium over a cheaper equal-or-better option.
-- Do not apply this model to exact single-keyword, pure short, coined, fixed-target, brand-dependent, or asset-inclusive cases that lack a defensible substitute market.
-- Historical sales never set, calibrate, or constrain the range.
-- Prefer same-keyword, same-TLD, same-role comparables; keep other TLDs and synonyms as separately labeled secondary context.
-- Exclude accidental substring matches, pattern-only analogies, and brand-dependent names.
-- Asking prices support listing position, not an expected transaction price.
-- Require at least three currently verified tier-1 or tier-2 comparables; MCP-only unverified listing leads do not satisfy the minimum. Otherwise report insufficient evidence without a range.
+- The value-bearing keyword defines the substitute neighborhood; construction pattern alone never does.
+- Price from current verified same-keyword for-sale listings, preferring same-TLD, same-role comparables; keep other TLDs and synonyms as labeled secondary context, and exclude pattern-only analogies and accidental substrings.
+- Require named superiority before supporting a premium over a cheaper equal-or-better substitute.
+- Apply the model only within Scope, and produce a range only when the sufficiency rule in workflow step 5 is met.
+- Historical sales never set, calibrate, or constrain the range; asking prices support listing position, not an expected transaction price.
 - Verify, deduplicate, label listing type, preserve provenance, and timestamp every price.
 - Do not recommend buying, selling, or accepting an offer.
