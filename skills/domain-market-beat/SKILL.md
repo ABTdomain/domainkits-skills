@@ -15,7 +15,7 @@ description: Produce a time-bounded domain-market news briefing with source tier
 - DNS resolution / nameserver validation, DomainKits: `dns`
 - Web access for sales, news, and market events
 
-Optional follow-up capabilities (used only when the user chooses to go deeper, not required for the briefing): `nrds`, `aged`, `deleted`, `expired`.
+Optional follow-up capabilities (used only when the user chooses to go deeper, not required for the briefing): `nrds`, `market`, `deleted`, `expired`.
 
 ## Time scope
 
@@ -62,7 +62,7 @@ Validate by the right source: registrar, expiry, and lifecycle status with `whoi
    - `domain_changes` for recent premium-domain transfers, expirations, and nameserver changes.
 
 3. **Analyze with figures, not adjectives.**
-   - For trend keywords, report current value, prior value, absolute change, percentage change, the baseline window, the sample size, and any rating the tool provides. Report each field only when the source provides it; otherwise mark it Not Provided, and never estimate or reconstruct a missing sample size or rating. When the current or prior value is zero, write the percentage change as Not Meaningful rather than an infinite or undefined percentage. If the tool gives no significance measure, do not call a move "significant"; call it the "largest observed change".
+   - For trend keywords, report current value, prior value, absolute change, percentage change, the baseline window, the sample size, and any rating the tool provides. Report each field only when the source provides it; otherwise mark it Not Provided, and never estimate or reconstruct a missing sample size or rating. When the prior (baseline) value is zero, write the percentage change as Not Meaningful rather than an infinite or undefined percentage; a fall to zero is a -100% change. If the tool gives no significance measure, do not call a move "significant"; call it the "largest observed change".
    - For each spike, assign Confirmed cause / Plausible context / Unknown, and watch for low-base effects.
    - For sales, classify each by sale type, and record source tier and verification status as two separate fields plus event and publication dates. Keep current bids and listing prices out of the sales set; route them to the active market offers table.
    - For movements, name the lifecycle stage and validate by the right source: registrar, expiry, and lifecycle status with `whois`; nameserver and DNS state with `dns`. When a movement from `domain_changes` is a nameserver change, confirm the current NS / DNS state with `dns` rather than inferring a launch or sale. If the validating source is unavailable, report only the observed change.
@@ -88,7 +88,7 @@ Active market offers table columns: Domain, Offer type (current auction bid / as
 
 ## Next steps
 
-Let the user choose whether to go deeper. Optional follow-ups: for an emerging keyword, use `nrds` to inspect aggregate registration patterns, `deleted` for dropped candidates that still require availability verification, and `expired` for expiring / backorder inventory. After a notable sale, use `nrds` to look for a registration wave, and `aged` only to inspect related for-sale inventory (a rise in for-sale listings is not proof a sale triggered a registration wave). For a notable expiration, track its status with the monitoring tool. Report domains and events only; do not look up or report personal details of the people behind them.
+Let the user choose whether to go deeper. Optional follow-ups: for an emerging keyword, use `nrds` to inspect aggregate registration patterns, `deleted` for dropped candidates that still require availability verification, and `expired` for expiring / backorder inventory. After a notable sale, use `nrds` to look for a registration wave, and `market` only to inspect related for-sale inventory (a rise in for-sale listings is not proof a sale triggered a registration wave). For a notable expiration, track its status with the monitoring tool. Report domains and events only; do not look up or report personal details of the people behind them.
 
 ## Key principles
 

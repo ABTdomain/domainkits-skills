@@ -8,7 +8,7 @@ Works with Claude Code, OpenClaw, and any agent that supports the [Agent Skills]
 
 DomainKits MCP gives your agent tools. Skills teach it **how to think**.
 
-An agent with DomainKits tools can look up WHOIS or check availability. An agent with DomainKits skills can analyze market trends, profile registration spikes, research catalysts, and find opportunities — the way an experienced domainer would.
+An agent with DomainKits tools can look up WHOIS or check availability. An agent with DomainKits skills can analyze market trends, profile registration spikes, research catalysts, and find opportunities the way an experienced domainer would.
 
 ## Skills
 
@@ -73,6 +73,8 @@ cp -r domainkits-skills/skills/keyword-intel ~/.claude/skills/
 
 Or download a single skill folder directly from GitHub.
 
+`domain-name-advisor` hands creative work to `domain-generator`, so install both together. The other skills work on their own.
+
 Claude Code will auto-detect the skill and use it when relevant. No restart needed.
 
 ## Skill Structure
@@ -98,9 +100,9 @@ Have a domain industry workflow that could be a skill? Contributions welcome.
 
 ## Links
 
-- [DomainKits](https://domainkits.com) — Domain intelligence platform
-- [DomainKits MCP](https://domainkits.com/mcp) — MCP endpoint documentation
-- [GitHub](https://github.com/ABTdomain/domainkits-mcp) — DomainKits MCP source
+- [DomainKits](https://domainkits.com): Domain intelligence platform
+- [DomainKits MCP](https://domainkits.com/mcp): MCP endpoint documentation
+- [GitHub](https://github.com/ABTdomain/domainkits-mcp): DomainKits MCP source
 
 ## License
 

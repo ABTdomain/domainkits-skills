@@ -93,7 +93,9 @@ Use the keyword, TLD, audience, industry, and style the user has already supplie
    - Fit the intended audience and brand character; do not require an abstract name to describe the industry literally. For regulated industries such as medical or finance, flag suggestive or misleading wording rather than blanket-excluding every imaginative term.
    - Availability alone does not make a name worth recommending.
 
-5. **Verify and curate.** Run `bulk_available` on the filtered candidates. Retain in the verified shortlist only candidates that `bulk_available` explicitly reports as available. Treat any other, missing, failed, or unrecognized result as unverified, never as available. From the explicitly available candidates, present only the 5 to 10 strongest. Preserve creative diversity in the shortlist rather than returning several versions of the same formula. If availability removes all strong non-literal directions, generate fresh candidates instead of filling the list with weak literal leftovers.
+5. **Verify and curate.** Run `bulk_available` on the filtered candidates. Retain in the verified shortlist only candidates that `bulk_available` explicitly reports as available. Treat any other, missing, failed, or unrecognized result as unverified, never as available. From the explicitly available candidates, present only the 5 to 10 strongest. Preserve creative diversity in the shortlist rather than returning several versions of the same formula. If availability removes all strong non-literal directions, generate fresh candidates instead of filling the list with weak literal leftovers, within the verification budget below.
+
+   **Verification budget.** Verify each round's candidates in one `bulk_available` call where the tool allows. Allow at most two more generation-and-verification rounds after the first, and stop earlier on a quota or rate-limit message. If fewer than five candidates qualify when the budget or quota runs out, present those that do, say why generation stopped (budget, quota, or no strong candidates left), and offer to continue later or in a different direction.
 
 6. **Iterate by territory.** On feedback, generate fresh names within the preferred semantic distance, image, sound, or construction method. Do not merely swap prefixes. Use domain-name-advisor in taken-target mode if the user wants deleted, expired, aged, or other acquisition-path options.
 
@@ -121,7 +123,7 @@ If the availability tool fails or returns inconclusive, missing, or unrecognized
 - Modern naming may be literal, suggestive, evocative, symbolic, or abstract. Intentional openness is valid; accidental incoherence is not.
 - Move through meaning, image, sound, and visual form. Concatenation, blending, and modifiers are tools, not the whole system.
 - Avoid template-driven startup cliches and availability-driven distortion.
-- Generate many internally, filter hard, present a small verified shortlist (5 to 10), not the full set.
+- Generate many internally, filter hard, present a small verified shortlist (5 to 10, or fewer with the reason when the verification budget or quota runs out), not the full set.
 - Keep the final shortlist creatively diverse; do not return several names built from the same formula.
 - Availability is point-in-time: label every verified domain "available at check time" only after an explicit per-domain available result, with a timestamp; keep inconclusive results in the separate unverified group.
 - Respect user-required strings; treat roots, modifiers, metaphors, and sound readings as interpretations, not facts.
