@@ -41,7 +41,7 @@ One tool failing marks that section Unavailable. Continue with the rest.
 
 2. **Recent registrations.** Call `nrds` with brand keyword, `position: all`, sort `reg_date_desc`. Note `total_found` and how many results were reviewed (page 1 = first 10). If total_found is large, state that only the first page was checked. Note any clusters of registrations on the same date as context (date clustering alone is weak evidence).
 
-3. **Cross-TLD footprint.** Call `tld_check` with brand prefix. Returns per-TLD status for core TLDs only (com, net, org, io, ai, de): `registered`, `expiring`, `for_sale`, or `might_available`. Aggregate counts (`count`, `gtlds_count`, `cctlds_count`) cover a wider TLD set but carry no per-TLD detail.
+3. **Cross-TLD footprint.** Call `tld_check` with brand prefix for per-TLD registration status.
 
 ### Phase 2: Per-domain evaluation
 
@@ -70,7 +70,7 @@ For each selected domain:
 1. **Summary.** Variants scanned, confirmed registered, investigated, defensive candidates. One paragraph.
 2. **Registered variants.** Per-domain data: mutation type, registered_date, registrar (from whois), nameservers, DNS records, safety flags (if checked). Neutral framing. These are domains worth monitoring, not confirmed infringers.
 3. **Recent registrations.** NRDs containing brand term from `nrds`, with dates. State total_found and pages checked.
-4. **Unconfirmed defensive candidates.** TLDs where `tld_check` returned `might_available` (core TLDs only). Ranked by importance (.com/.net/.org first). Availability is unconfirmed; offer to verify with `available`/`bulk_available`.
+4. **Unconfirmed defensive candidates.** TLDs where `tld_check` returned `might_available`. Ranked by importance (.com/.net/.org first). Availability is unconfirmed; offer to verify with `available`/`bulk_available`.
 5. **Not investigated.** How many variants were skipped, why (quota, unknown status, lower priority).
 6. **Unavailable evidence.** Any tools that failed or returned errors during the scan. State which section is affected and what data is missing.
 
@@ -87,6 +87,5 @@ For each selected domain:
 ## Limitations
 
 - Typosquat covers common mutations (omission, transposition, keyboard-adjacent replacement, insertion, repetition, hyphenation, homoglyph, vowel-swap, plural, TLD-swap). IDN homograph and multi-language variants are not covered.
-- `tld_check` returns per-TLD status for six core TLDs (com, net, org, io, ai, de). Aggregate counts cover more TLDs, but per-TLD status beyond the core set is not returned.
 - This skill evaluates domains individually. It cannot determine whether multiple domains belong to the same registrant.
 - Visual similarity is a model inference, not a measured value. Different models may assess it differently.

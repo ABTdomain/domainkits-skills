@@ -23,7 +23,7 @@ This skill evaluates trends within the global, general-purpose open domain marke
 
 `.com` is the primary confirmation layer because it is the most established global namespace and aftermarket: registration cost and quality-name scarcity are higher, global recognition and end use are broader, secondary-market liquidity is stronger, and registering a `.com` means accepting more competition. It remains the largest single TLD by registration volume. A keyword trend with little or no `.com` participation is not considered validated by the open domain market, especially when registrations are concentrated in one low-cost TLD, one registrar, or a repeated naming pattern.
 
-This model does not claim a non-.com ecosystem cannot be active. It means such activity has not been validated as a broad open-market domain trend. Country-specific ccTLD markets and extension-native ecosystems require a separate model.
+This model does not claim a non-.com ecosystem cannot be active. It means such activity has not been validated as a broad open-market domain trend. Extension-native ecosystems require a separate model.
 
 Independent participation, not raw `.com` count. A large `.com` block created through one concentrated pattern is not broad participation. Read the cohort from seven signals together: absolute `.com` count, `com_ratio`, registrar concentration, naming-pattern diversity, persistence across windows, low-base status, and single-TLD concentration. Registrar concentration is a necessary participant-diversity proxy, not registrant identity or a direct participant count. Use the trend provider's aggregate registrar distribution; use `nrds` only for the domain-row signals it actually returns.
 
