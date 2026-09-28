@@ -92,6 +92,6 @@ For each selected domain:
 
 ## Limitations
 
-- Typosquat covers common mutations (omission, transposition, keyboard-adjacent replacement, insertion, repetition, hyphenation, homoglyph, vowel-swap, plural, TLD-swap). IDN homograph and multi-language variants are not covered.
+- Typosquat covers the mutation types the tool generates, not every possible lookalike.
 - This skill evaluates domains individually. It does not attribute domains to any person or organization.
 - Visual similarity is a model inference, not a measured value. Different models may assess it differently.
